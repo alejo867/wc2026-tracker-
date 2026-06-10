@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#2D6A4F"/>
+  <circle cx="256" cy="240" r="140" fill="white"/>
+  <circle cx="256" cy="240" r="140" fill="none" stroke="#1B4332" stroke-width="8"/>
+  <polygon points="256,150 298,180 298,220 256,250 214,220 214,180" fill="#1B4332"/>
+  <polygon points="256,250 298,220 340,234 344,278 314,300 256,292" fill="#1B4332"/>
+  <polygon points="256,250 214,220 172,234 168,278 198,300 256,292" fill="#1B4332"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="52" font-weight="700" fill="white">WC26</text>
+</svg>
