@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#1B4332" media="(prefers-color-scheme: dark)"/>
+<meta name="theme-color" content="#2D6A4F" media="(prefers-color-scheme: light)"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="WC2026"/>
+<meta name="description" content="FIFA World Cup 2026 Seattle Tracker — live scores, watch parties near Redmond, predictions, and Apple Calendar export."/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<title>World Cup 2026 · Seattle Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="config.js"></script>
+<style>
+:root {
+  --g1:#0F2C1F;--g2:#1B4332;--g3:#2D6A4F;--g4:#52B788;--g5:#95D5B2;--g6:#D8F3DC;--g7:#F0FAF4;
+  --t1:#082540;--t2:#0B3E6F;--t3:#1B6CA8;--t4:#4DA1D8;--t5:#92C5E8;--t6:#D6EAF8;--t7:#EBF5FB;
+  --c1:#2E1008;--c2:#4A2010;--c3:#7B4F2E;--c4:#C1885A;--c5:#DEBA9A;--c6:#F5E6D8;--c7:#FBF3EC;
+  --go1:#3A2505;--go2:#5A3E0A;--go3:#C9981A;--go4:#EFC050;--go5:#FDE68A;--go6:#FEF3CD;--go7:#FFFAED;
+  --pu1:#1A0F50;--pu2:#311B92;--pu3:#5E35B1;--pu4:#9575CD;--pu5:#C5B4E3;--pu6:#EDE7F6;--pu7:#F5F0FB;
+  --rd1:#7B0D0D;--rd2:#B71C1C;--rd3:#E57373;--rd4:#FFCDD2;--rd5:#FFEBEE;
+  --bg:#F7F8F5;--surf:#FFFFFF;--surf2:#F0F2ED;--surf3:#E4E7DF;
+  --bd:rgba(0,0,0,0.09);--bd2:rgba(0,0,0,0.16);--bd3:rgba(0,0,0,0.26);
+  --tx:#0D0F0C;--tx2:#2D3328;--tx3:#525C4A;--tx4:#747D69;--tx5:#9BA38E;
+  --col1:#FFD700;--col2:#003087;
+  --usa1:#B22234;--usa2:#3C3B6E;
+  --r:10px;--rm:14px;--rl:18px;--rp:999px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 2px 8px rgba(0,0,0,.05);
+  --shm:0 2px 12px rgba(0,0,0,.10),0 4px 20px rgba(0,0,0,.07);
+  --nh:62px;--f:'Inter',system-ui,-apple-system,sans-serif;
+  --fs-xs:11px;--fs-sm:12px;--fs-base:14px;--fs-md:15px;--fs-lg:17px;--fs-xl:20px;
+}
+[data-theme="dark"]{
+  --bg:#0A0D09;--surf:#131710;--surf2:#1A1F18;--surf3:#222820;
+  --bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.14);--bd3:rgba(255,255,255,.22);
+  --tx:#F0F2ED;--tx2:#C8CEBF;--tx3:#98A08C;--tx4:#6B7362;--tx5:#454D3E;
+  --g6:#0A2015;--g7:#061309;--t6:#081826;--t7:#040F18;
+  --c6:#1A0D06;--c7:#0D0704;--go6:#1A1200;--go7:#0D0900;--pu6:#130B2E;--pu7:#0A0620;--rd4:#3D1212;--rd5:#200808;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A0D09;--surf:#131710;--surf2:#1A1F18;--surf3:#222820;
+  --bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.14);--bd3:rgba(255,255,255,.22);
+  --tx:#F0F2ED;--tx2:#C8CEBF;--tx3:#98A08C;--tx4:#6B7362;--tx5:#454D3E;
+  --g6:#0A2015;--g7:#061309;--t6:#081826;--t7:#040F18;
+  --c6:#1A0D06;--c7:#0D0704;--go6:#1A1200;--go7:#0D0900;--pu6:#130B2E;--pu7:#0A0620;--rd4:#3D1212;--rd5:#200808;
+}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:var(--f);background:var(--bg);color:var(--tx);font-size:var(--fs-base);line-height:1.5}
+button,input,select,textarea{font-family:var(--f);font-size:inherit}
+a{color:var(--t3)}
+:focus-visible{outline:3px solid var(--g4);outline-offset:2px;border-radius:3px}
+#app{display:flex;flex-direction:column;height:100%;height:100dvh}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + env(safe-area-inset-bottom,0px) + 16px)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* HEADER */
+.hdr{position:relative;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(155deg,#071E11 0%,#0F2C1F 30%,#1B4332 58%,#0B3E6F 100%);
+  padding:calc(env(safe-area-inset-top,0px) + 11px) 16px 11px}
+.hdr-orb1{position:absolute;top:-50px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(77,161,216,.14);pointer-events:none}
+.hdr-orb2{position:absolute;bottom:-60px;left:5px;width:140px;height:140px;border-radius:50%;background:rgba(82,183,136,.12);pointer-events:none}
+.hdr-top{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.hdr-title{font-size:var(--fs-xl);font-weight:700;color:#FFF;letter-spacing:-.4px;line-height:1.1}
+.hdr-sub{font-size:var(--fs-xs);color:rgba(255,255,255,.72);margin-top:1px}
+.hdr-controls{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.live-badge{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-xs);font-weight:700;padding:4px 10px;border-radius:var(--rp);background:#D12B2B;color:#FFF;letter-spacing:.04em}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#FFF;animation:blink 1.3s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hdr-pills{position:relative;z-index:1;display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.hdr-pill{font-size:var(--fs-xs);padding:3px 9px;border-radius:var(--rp);background:rgba(255,255,255,.14);color:rgba(255,255,255,.88);border:.5px solid rgba(255,255,255,.2)}
+.fan-badge{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-xs);font-weight:700;padding:3px 9px;border-radius:var(--rp);border:.5px solid rgba(255,255,255,.3)}
+.fan-col{background:rgba(255,215,0,.2);color:#FFD700}
+.fan-usa{background:rgba(178,34,52,.2);color:#FFB3BD}
+.theme-btn{background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.25);border-radius:var(--rp);padding:5px 10px;color:rgba(255,255,255,.9);cursor:pointer;font-size:var(--fs-xs);font-weight:500;display:flex;align-items:center;gap:4px}
+.theme-btn:hover{background:rgba(255,255,255,.25)}
+
+/* TICKER */
+.ticker{position:relative;z-index:1;display:flex;gap:6px;margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.ticker::-webkit-scrollbar{display:none}
+.tick-card{flex-shrink:0;background:rgba(0,0,0,.28);border:.5px solid rgba(255,255,255,.18);border-radius:var(--r);padding:5px 10px;display:flex;align-items:center;gap:8px}
+.tick-teams{font-size:var(--fs-xs);font-weight:600;color:#FFF}
+.tick-score{font-size:13px;font-weight:700;color:#FFF;background:rgba(255,255,255,.18);padding:1px 7px;border-radius:4px}
+.tick-status{font-size:10px;color:rgba(255,255,255,.65)}
+.tick-live{color:#FF8585;font-weight:700;animation:blink .9s infinite}
+.tick-empty{font-size:var(--fs-xs);color:rgba(255,255,255,.5);padding:5px 0;font-style:italic}
+
+/* AUTH BAR */
+.auth-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surf);border-bottom:.5px solid var(--bd);min-height:44px}
+.auth-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--g4);display:none}
+.auth-name{font-size:var(--fs-sm);font-weight:600;color:var(--tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-sub{font-size:var(--fs-xs);color:var(--tx3)}
+.abtn{font-size:var(--fs-sm);font-weight:600;padding:7px 16px;border-radius:var(--rp);cursor:pointer;border:1.5px solid var(--bd2);background:transparent;color:var(--tx2);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;min-height:36px}
+.abtn:hover{background:var(--surf2)}
+.abtn.primary{background:var(--g3);color:#FFF;border-color:var(--g3)}
+.abtn.primary:hover{background:var(--g2)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--g4);flex-shrink:0}
+.sdot.spin{animation:blink .7s infinite}
+.sdot.err{background:var(--rd2)}
+
+/* BOTTOM NAV */
+.bnav{height:calc(var(--nh) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surf);border-top:1px solid var(--bd2);display:flex;align-items:stretch;flex-shrink:0;position:relative;z-index:10}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 2px 4px;border:none;background:transparent;color:var(--tx4);cursor:pointer;transition:color .15s;min-width:0}
+.ntab.active{color:var(--g3)}
+.ntab i{font-size:22px}
+.ntab span{font-size:10px;font-weight:600}
+.nind{position:absolute;top:0;height:3px;background:var(--g3);border-radius:0 0 3px 3px;transition:left .2s cubic-bezier(.4,0,.2,1),width .2s}
+
+/* VIEWS */
+.view{display:none}.view.active{display:block}
+
+/* FILTER STRIP */
+.fstrip{display:flex;gap:5px;padding:8px 14px 4px;overflow-x:auto;scrollbar-width:none}
+.fstrip::-webkit-scrollbar{display:none}
+.fc{flex-shrink:0;font-size:var(--fs-sm);font-weight:600;padding:7px 14px;border-radius:var(--rp);border:1.5px solid var(--bd2);background:var(--surf);color:var(--tx3);cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;min-height:36px;transition:all .15s}
+.fc.active{background:var(--g3);color:#FFF;border-color:var(--g3)}
+.fc:hover:not(.active){background:var(--g7);border-color:var(--g4);color:var(--g2)}
+.search-wrap{padding:8px 14px 4px;position:relative}
+.si-icon{position:absolute;left:27px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--tx4);pointer-events:none}
+.si{width:100%;padding:10px 14px 10px 42px;border-radius:var(--rp);border:1.5px solid var(--bd2);background:var(--surf2);color:var(--tx);font-size:var(--fs-base);min-height:44px}
+.si:focus{outline:none;border-color:var(--g4);background:var(--surf)}
+
+/* DAY HEADER */
+.dhdr{display:flex;align-items:center;gap:8px;padding:12px 14px 4px;position:sticky;top:0;background:var(--bg);z-index:2}
+.dhdr-text{font-size:var(--fs-xs);font-weight:700;color:var(--g3);text-transform:uppercase;letter-spacing:.09em}
+.dhdr-pill{font-size:var(--fs-xs);padding:2px 8px;border-radius:var(--rp);background:var(--g6);color:var(--g2);font-weight:700}
+.mwrap{padding:0 14px;display:flex;flex-direction:column;gap:8px;padding-bottom:8px}
+
+/* MATCH CARD */
+.mc{background:var(--surf);border-radius:var(--rm);border:1.5px solid var(--bd);padding:13px 14px;box-shadow:var(--sh)}
+.mc.ep{border-left:4px solid var(--g3);background:linear-gradient(90deg,var(--g7) 0%,var(--surf) 70%)}
+.mc.eh{border-left:4px solid var(--t3);background:linear-gradient(90deg,var(--t7) 0%,var(--surf) 70%)}
+.mc.esk{opacity:.45}
+.mc.fancol{border-color:var(--col1);box-shadow:0 0 0 1px rgba(255,215,0,.25),var(--sh)}
+.mc.fanusa{border-color:var(--usa1);box-shadow:0 0 0 1px rgba(178,34,52,.18),var(--sh)}
+.mc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.mc-teams-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.team-part{display:flex;align-items:center;gap:5px}
+.team-flag{font-size:18px;line-height:1}
+.team-name{font-size:var(--fs-md);font-weight:700;color:var(--tx)}
+.vs-sep{font-size:var(--fs-sm);color:var(--tx4);font-weight:500}
+.mc-score{font-size:19px;font-weight:700;color:var(--tx);background:var(--surf2);padding:4px 11px;border-radius:var(--r);letter-spacing:.5px;white-space:nowrap;border:1px solid var(--bd)}
+.mc-score.live{color:var(--g2);background:var(--g6);border-color:var(--g5)}
+.mc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;align-items:center}
+.mc-meta{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap}
+.mc-meta-item{display:flex;align-items:center;gap:3px;font-size:var(--fs-sm);color:var(--tx3)}
+.mc-meta-item i{font-size:13px}
+.mc-actions{display:flex;gap:5px;margin-top:10px;padding-top:9px;border-top:1px solid var(--bd);align-items:center;flex-wrap:wrap}
+.plbl{font-size:var(--fs-xs);color:var(--tx4);font-weight:500;margin-right:2px}
+.evb{font-size:var(--fs-xs);font-weight:600;padding:6px 12px;border-radius:var(--rp);border:1.5px solid var(--bd2);background:transparent;color:var(--tx3);display:inline-flex;align-items:center;gap:3px;cursor:pointer;min-height:32px;transition:all .12s}
+.evb.ep{background:var(--g6);color:var(--g2);border-color:var(--g4)}
+.evb.eh{background:var(--t6);color:var(--t2);border-color:var(--t4)}
+.evb.esk{background:var(--surf2);color:var(--tx4);border-color:var(--bd)}
+.favbtn{background:transparent;border:2px solid transparent;padding:4px;line-height:1;cursor:pointer;font-size:22px;flex-shrink:0;border-radius:var(--r)}
+.mc-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+
+/* BADGES */
+.sb{font-size:var(--fs-xs);font-weight:700;padding:2px 8px;border-radius:var(--rp);letter-spacing:.04em;white-space:nowrap}
+.sb-Group{background:var(--g6);color:var(--g2)}
+.sb-R32{background:var(--t6);color:var(--t2)}
+.sb-R16{background:var(--go6);color:var(--go2)}
+.sb-QF{background:var(--c6);color:var(--c2)}
+.sb-SF{background:var(--pu6);color:var(--pu2)}
+.sb-Final{background:var(--g2);color:#FFF}
+.sea-badge{font-size:var(--fs-xs);font-weight:700;padding:2px 9px;border-radius:var(--rp);background:linear-gradient(90deg,var(--g2),var(--t2));color:#FFF}
+
+/* PREDICTION */
+.pred-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.plbl2{font-size:var(--fs-xs);color:var(--tx4);font-weight:500}
+.sc-in{width:42px;height:36px;text-align:center;font-size:15px;font-weight:700;border:1.5px solid var(--bd2);border-radius:var(--r);background:var(--surf2);color:var(--tx)}
+.sc-in:focus{outline:none;border-color:var(--g4)}
+.wsel{font-size:var(--fs-sm);padding:7px 9px;border:1.5px solid var(--bd2);border-radius:var(--r);background:var(--surf);color:var(--tx);max-width:130px;min-height:36px}
+.wsel:focus{outline:none;border-color:var(--g4)}
+.savbtn{font-size:var(--fs-sm);font-weight:700;padding:7px 16px;border-radius:var(--rp);border:1.5px solid var(--g4);color:var(--g2);background:transparent;cursor:pointer;min-height:36px}
+.savbtn:hover{background:var(--g6)}
+.pchip{font-size:var(--fs-xs);font-weight:700;color:var(--g2);background:var(--g6);padding:3px 10px;border-radius:var(--rp);border:.5px solid var(--g5)}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;gap:8px;padding:12px 14px 5px}
+.sec-hdr-txt{font-size:var(--fs-xs);font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
+.sec-hdr-line{flex:1;height:1px;background:var(--bd2)}
+
+/* STAT CARDS */
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 14px}
+.scard{background:var(--surf);border-radius:var(--r);border:1px solid var(--bd);padding:11px 10px 9px;text-align:center}
+.sval{font-size:22px;font-weight:700}
+.slbl{font-size:var(--fs-xs);color:var(--tx3);margin-top:1px;font-weight:500}
+.scard.g .sval{color:var(--g3)}
+.scard.t .sval{color:var(--t3)}
+.scard.c .sval{color:var(--c3)}
+.scard.go .sval{color:var(--go3)}
+
+/* PREDICTION RING */
+.pred-ring{margin:6px 14px 2px;background:var(--surf);border-radius:var(--rm);border:1px solid var(--g6);padding:14px;display:flex;align-items:center;gap:14px}
+
+/* PROGRESS BARS */
+.prog-sec{padding:0 14px 10px}
+.prow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.plbl3{font-size:var(--fs-sm);color:var(--tx2);min-width:90px;font-weight:500}
+.ptrack{flex:1;height:8px;background:var(--surf2);border-radius:var(--rp);overflow:hidden;border:.5px solid var(--bd)}
+.pfill{height:100%;border-radius:var(--rp);transition:width .6s ease}
+.pct{font-size:var(--fs-xs);color:var(--tx4);min-width:34px;text-align:right;font-weight:600}
+
+/* CALENDAR */
+.cal-legend{display:flex;gap:8px;padding:8px 14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:4px;font-size:var(--fs-xs);color:var(--tx2);font-weight:500}
+.ldot{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;gap:8px;padding:4px 14px}
+.cal-mo{font-size:var(--fs-lg);font-weight:700;color:var(--tx);flex:1}
+.calbtn{width:36px;height:36px;border:1.5px solid var(--bd2);border-radius:var(--r);background:var(--surf);display:flex;align-items:center;justify-content:center;color:var(--tx2);cursor:pointer}
+.calbtn:hover{background:var(--g7);border-color:var(--g4)}
+.ical-btn{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-sm);font-weight:600;padding:7px 13px;border:1.5px solid;border-radius:var(--rp);cursor:pointer;min-height:36px;transition:all .15s}
+.ical-btn.apple{border-color:var(--bd3);color:var(--tx2);background:transparent}
+.ical-btn.apple:hover{background:var(--surf2)}
+.ical-btn.gcal{border-color:var(--t4);color:var(--t3);background:transparent}
+.ical-btn.gcal:hover{background:var(--t7)}
+.cal-export-row{display:flex;gap:6px;padding:6px 14px 8px;flex-wrap:wrap}
+.cal-dows{display:grid;grid-template-columns:repeat(7,1fr);padding:0 12px;margin-bottom:3px}
+.cal-dow{text-align:center;font-size:var(--fs-xs);color:var(--tx3);padding:4px 0;font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 12px}
+.cal-cell{min-height:66px;border:1px solid var(--bd);border-radius:var(--r);padding:4px;background:var(--surf);cursor:pointer}
+.cal-cell:active{background:var(--surf2)}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-cell.today{border-color:var(--g3);border-width:2px}
+.cal-cell.sel{background:var(--g7);border-color:var(--g4)}
+.cal-dnum{font-size:var(--fs-xs);color:var(--tx3);margin-bottom:2px;font-weight:700}
+.cal-cell.today .cal-dnum{color:var(--g3)}
+.cpip{font-size:9px;padding:1px 3px;border-radius:2px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;font-weight:600}
+.cpip.Group{background:var(--g6);color:var(--g2)}
+.cpip.R32{background:var(--t6);color:var(--t2)}
+.cpip.R16{background:var(--go6);color:var(--go2)}
+.cpip.QF{background:var(--c6);color:var(--c2)}
+.cpip.SF{background:var(--pu6);color:var(--pu2)}
+.cpip.Final{background:var(--g2);color:#FFF}
+.cal-detail{padding:0 14px;margin-top:12px}
+
+/* STANDINGS */
+.grp-select{display:flex;gap:5px;padding:8px 14px;overflow-x:auto;scrollbar-width:none}
+.grp-select::-webkit-scrollbar{display:none}
+.grp-btn{flex-shrink:0;font-size:var(--fs-sm);font-weight:700;padding:7px 14px;border-radius:var(--rp);border:1.5px solid var(--bd2);background:var(--surf);color:var(--tx3);cursor:pointer;min-height:36px;transition:all .15s}
+.grp-btn.active{background:var(--g3);color:#FFF;border-color:var(--g3)}
+.stbl{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+.stbl th{font-size:var(--fs-xs);font-weight:700;color:var(--tx3);text-align:left;padding:7px 8px;text-transform:uppercase;letter-spacing:.07em;border-bottom:1.5px solid var(--bd2)}
+.stbl td{padding:9px 8px;border-bottom:.5px solid var(--bd);vertical-align:middle}
+.stbl tr:last-child td{border-bottom:none}
+.stbl tr:hover td{background:var(--surf2)}
+.pos-b{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:700}
+.pos-q{background:var(--g6);color:var(--g2)}
+.pos-m{background:var(--go6);color:var(--go2)}
+.pos-out{background:var(--surf2);color:var(--tx4)}
+.tbl-wrap{padding:0 14px 10px;overflow-x:auto}
+.refresh-row{display:flex;align-items:center;justify-content:space-between;padding:6px 14px 4px}
+.refresh-txt{font-size:var(--fs-xs);color:var(--tx4);font-weight:500}
+.refresh-btn{font-size:var(--fs-xs);font-weight:600;padding:5px 11px;border-radius:var(--rp);border:1.5px solid var(--bd2);background:transparent;color:var(--tx3);cursor:pointer;display:flex;align-items:center;gap:4px;min-height:32px}
+.refresh-btn:hover{background:var(--surf2)}
+
+/* CHART */
+.chart-card{margin:6px 14px;background:var(--surf);border-radius:var(--rm);border:1px solid var(--bd);padding:14px}
+.chart-title{font-size:var(--fs-sm);font-weight:700;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;gap:16px;padding:0 14px 8px;flex-wrap:wrap}
+.pleg{display:flex;flex-direction:column;gap:6px}
+.pli{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:var(--tx2);font-weight:500}
+.plsw{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+
+/* SHARE / ICS */
+.share-card{margin:6px 14px;background:var(--g7);border:1.5px solid var(--g5);border-radius:var(--rm);padding:14px}
+.share-title{font-size:var(--fs-sm);font-weight:700;color:var(--g2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.share-input{width:100%;padding:9px 11px;border-radius:var(--r);border:1.5px solid var(--g5);background:var(--surf);color:var(--tx);font-size:var(--fs-sm);margin-bottom:8px;min-height:40px}
+.share-input:focus{outline:none;border-color:var(--g4)}
+.share-link{font-size:var(--fs-sm);color:var(--t3);word-break:break-all;background:var(--surf);padding:9px 11px;border-radius:var(--r);border:1.5px solid var(--t5);margin-top:8px;display:flex;align-items:center;gap:8px}
+.copy-btn{flex-shrink:0;font-size:var(--fs-xs);font-weight:700;padding:4px 9px;border-radius:var(--rp);border:1.5px solid var(--t4);color:var(--t3);background:transparent;cursor:pointer;min-height:28px}
+.copy-btn:hover{background:var(--t6)}
+.ics-info{font-size:var(--fs-xs);color:var(--tx3);margin-top:8px;line-height:1.5;font-weight:500}
+
+/* VENUES */
+.venue-card{background:var(--surf);border-radius:var(--rm);border:1.5px solid var(--bd);padding:14px;box-shadow:var(--sh);transition:border-color .15s}
+.venue-card:hover{border-color:var(--g4)}
+.venue-card.fav-venue{border-color:var(--go3);background:linear-gradient(135deg,var(--go7) 0%,var(--surf) 80%)}
+.venue-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.venue-name{font-size:var(--fs-md);font-weight:700;color:var(--tx);line-height:1.25}
+.venue-type{font-size:var(--fs-xs);font-weight:700;padding:2px 8px;border-radius:var(--rp);margin-top:4px;display:inline-block}
+.vt-official{background:var(--g6);color:var(--g2)}
+.vt-bar{background:var(--t6);color:var(--t2)}
+.vt-venue{background:var(--pu6);color:var(--pu2)}
+.vt-outdoor{background:var(--go6);color:var(--go2)}
+.vt-free{background:var(--c6);color:var(--c2)}
+.venue-meta{font-size:var(--fs-sm);color:var(--tx3);margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;font-weight:500}
+.venue-meta span{display:flex;align-items:center;gap:3px}
+.venue-desc{font-size:var(--fs-sm);color:var(--tx2);margin-top:6px;line-height:1.5}
+.venue-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.vtag{font-size:var(--fs-xs);font-weight:600;padding:3px 9px;border-radius:var(--rp);background:var(--surf2);color:var(--tx3);border:1px solid var(--bd)}
+.venue-dist{font-size:var(--fs-xs);font-weight:700;padding:3px 9px;border-radius:var(--rp);background:var(--g6);color:var(--g2)}
+.venue-actions{display:flex;gap:6px;margin-top:10px;padding-top:9px;border-top:1px solid var(--bd);flex-wrap:wrap}
+.venue-btn{font-size:var(--fs-xs);font-weight:700;padding:6px 13px;border-radius:var(--rp);border:1.5px solid;cursor:pointer;display:inline-flex;align-items:center;gap:4px;min-height:32px;transition:all .12s}
+.venue-btn.primary{background:var(--g3);color:#FFF;border-color:var(--g3)}
+.venue-btn.primary:hover{background:var(--g2)}
+.venue-btn.secondary{background:transparent;color:var(--t3);border-color:var(--t4)}
+.venue-btn.secondary:hover{background:var(--t7)}
+.venue-btn.outline{background:transparent;color:var(--tx3);border-color:var(--bd2)}
+.venue-btn.outline:hover{background:var(--surf2)}
+.venue-note{font-size:var(--fs-xs);color:var(--tx4);padding:4px 14px 8px;font-style:italic;font-weight:500}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--nh) + env(safe-area-inset-bottom,0px) + 14px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--tx);color:var(--bg);font-size:var(--fs-sm);font-weight:600;padding:11px 22px;border-radius:var(--rp);opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none;box-shadow:var(--shm)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LOADER */
+.loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:300;transition:opacity .35s}
+.loader.gone{opacity:0;pointer-events:none}
+.spin{width:36px;height:36px;border:3px solid var(--g6);border-top-color:var(--g3);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-size:var(--fs-base);color:var(--tx3);font-weight:500}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;padding:48px 16px;color:var(--tx4);text-align:center;gap:8px}
+.empty-ico{font-size:42px}
+.empty-txt{font-size:var(--fs-base);color:var(--tx3);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div style="font-size:34px">⚽</div>
+  <div class="spin"></div>
+  <div class="loader-txt">Loading World Cup 2026…</div>
+</div>
+
+<div id="app">
+  <header class="hdr">
+    <div class="hdr-orb1" aria-hidden="true"></div>
+    <div class="hdr-orb2" aria-hidden="true"></div>
+    <div class="hdr-top">
+      <div>
+        <div class="hdr-title">⚽ World Cup 2026</div>
+        <div class="hdr-sub">Seattle Tracker · Jun 11 – Jul 19 · All times PT</div>
+      </div>
+      <div class="hdr-controls">
+        <span class="live-badge"><span class="live-dot" aria-hidden="true"></span><span id="cd-txt">LIVE</span></span>
+        <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode">
+          <i class="ti ti-sun" id="theme-icon" aria-hidden="true"></i><span id="theme-lbl">Light</span>
+        </button>
+      </div>
+    </div>
+    <div class="hdr-pills">
+      <span class="hdr-pill">48 teams</span>
+      <span class="hdr-pill">104 matches</span>
+      <span class="hdr-pill">6 Seattle games</span>
+      <span class="fan-badge fan-col">🇨🇴 Colombia</span>
+      <span class="fan-badge fan-usa">🇺🇸 USA</span>
+    </div>
+    <div class="ticker" id="score-ticker">
+      <span class="tick-empty">Live scores appear here when matches start June 11</span>
+    </div>
+  </header>
+
+  <div class="auth-bar">
+    <div id="ao" style="display:flex;align-items:center;gap:8px;width:100%">
+      <div style="flex:1;font-size:var(--fs-xs);color:var(--tx3);font-weight:500">Sign in to sync across devices &amp; share predictions</div>
+      <button class="abtn primary" onclick="App.signIn()">
+        <i class="ti ti-brand-google" style="font-size:14px" aria-hidden="true"></i> Sign in
+      </button>
+    </div>
+    <div id="ai" style="display:none;align-items:center;gap:8px;width:100%">
+      <div class="sdot" id="sdot" aria-hidden="true"></div>
+      <img id="aavatar" class="auth-avatar" src="" alt="Profile"/>
+      <div style="flex:1;min-width:0">
+        <div class="auth-name" id="aname">Signed in</div>
+        <div class="auth-sub" id="astatus">Syncing…</div>
+      </div>
+      <button class="abtn" onclick="App.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <main class="scroll" id="scroll">
+
+    <!-- SCHEDULE -->
+    <div id="v-schedule" class="view active">
+      <div class="search-wrap">
+        <i class="ti ti-search si-icon" aria-hidden="true"></i>
+        <input class="si" type="search" placeholder="Search team, group, or venue…" id="srch" oninput="App.rSched()" aria-label="Search matches"/>
+      </div>
+      <div class="fstrip" id="stage-chips">
+        <button class="fc active" data-s="" onclick="App.setStage(this,'')">All 104</button>
+        <button class="fc" data-s="Group" onclick="App.setStage(this,'Group')">Group</button>
+        <button class="fc" data-s="R32" onclick="App.setStage(this,'R32')">R32</button>
+        <button class="fc" data-s="R16" onclick="App.setStage(this,'R16')">R16</button>
+        <button class="fc" data-s="QF" onclick="App.setStage(this,'QF')">QF</button>
+        <button class="fc" data-s="SF" onclick="App.setStage(this,'SF')">SF</button>
+        <button class="fc" data-s="Final" onclick="App.setStage(this,'Final')">Final</button>
+        <button class="fc" id="fc-fav" onclick="App.tFavF()"><i class="ti ti-star" style="font-size:13px" aria-hidden="true"></i> Starred</button>
+        <button class="fc" id="fc-plan" onclick="App.tPlanF()"><i class="ti ti-calendar-event" style="font-size:13px" aria-hidden="true"></i> Planned</button>
+        <button class="fc" id="fc-sea" onclick="App.tSeaF()">📍 Seattle</button>
+        <button class="fc" id="fc-col" onclick="App.tColF()">🇨🇴 Colombia</button>
+        <button class="fc" id="fc-usa" onclick="App.tUsaF()">🇺🇸 USA</button>
+        <button class="fc" id="fc-live" onclick="App.tLiveF()"><span style="color:#D12B2B" aria-hidden="true">●</span> Live</button>
+      </div>
+      <div id="sched-list"></div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="v-calendar" class="view">
+      <div class="cal-legend">
+        <div class="leg"><span class="ldot" style="background:#52B788"></span>Group</div>
+        <div class="leg"><span class="ldot" style="background:#1B6CA8"></span>R32</div>
+        <div class="leg"><span class="ldot" style="background:#C9981A"></span>R16</div>
+        <div class="leg"><span class="ldot" style="background:#7B4F2E"></span>QF</div>
+        <div class="leg"><span class="ldot" style="background:#5E35B1"></span>SF</div>
+        <div class="leg"><span class="ldot" style="background:#1B4332"></span>Final</div>
+        <div class="leg"><span>🎉</span>Party</div>
+        <div class="leg"><span>🏠</span>Home</div>
+      </div>
+      <div class="cal-nav">
+        <button class="calbtn" onclick="App.pMo()" aria-label="Previous month"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+        <span class="cal-mo" id="cal-mo">June 2026</span>
+        <button class="calbtn" onclick="App.nMo()" aria-label="Next month"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <div class="cal-export-row">
+        <button class="ical-btn apple" onclick="App.exportICS('planned')"><i class="ti ti-calendar-plus" style="font-size:14px" aria-hidden="true"></i> Apple Calendar (.ics)</button>
+        <button class="ical-btn gcal" onclick="App.expGCal()"><i class="ti ti-brand-google" style="font-size:14px" aria-hidden="true"></i> Google Calendar</button>
+        <button class="ical-btn apple" onclick="App.exportICS('seattle')" style="border-color:var(--g4);color:var(--g3)">📍 Seattle only</button>
+        <button class="ical-btn apple" onclick="App.exportICS('all')" style="border-color:var(--bd3);color:var(--tx3)">All 104</button>
+      </div>
+      <div class="cal-dows">
+        <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
+        <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-detail" id="cal-detail"></div>
+    </div>
+
+    <!-- STANDINGS -->
+    <div id="v-standings" class="view">
+      <div class="refresh-row">
+        <span class="refresh-txt" id="standings-updated">Loading standings…</span>
+        <button class="refresh-btn" onclick="App.fetchStandings(true)"><i class="ti ti-refresh" style="font-size:13px" aria-hidden="true"></i> Refresh</button>
+      </div>
+      <div class="grp-select" id="grp-btns"></div>
+      <div class="tbl-wrap">
+        <table class="stbl">
+          <thead><tr>
+            <th style="width:30px">#</th><th>Team</th>
+            <th style="text-align:center" title="Played">P</th><th style="text-align:center" title="Won">W</th>
+            <th style="text-align:center" title="Drawn">D</th><th style="text-align:center" title="Lost">L</th>
+            <th style="text-align:center" title="Goal Difference">GD</th><th style="text-align:center" title="Points">Pts</th>
+          </tr></thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><i class="ti ti-chart-bar" style="font-size:15px" aria-hidden="true"></i> Points leaders by group</div>
+        <div style="position:relative;height:220px"><canvas id="grp-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- PREDICTIONS -->
+    <div id="v-predictions" class="view">
+      <div id="pred-hdr"></div>
+      <div class="fstrip">
+        <button class="fc active" data-ps="" onclick="App.setPStage(this,'')">All</button>
+        <button class="fc" data-ps="Group" onclick="App.setPStage(this,'Group')">Group</button>
+        <button class="fc" data-ps="R32" onclick="App.setPStage(this,'R32')">R32</button>
+        <button class="fc" data-ps="R16" onclick="App.setPStage(this,'R16')">R16</button>
+        <button class="fc" data-ps="QF" onclick="App.setPStage(this,'QF')">QF</button>
+        <button class="fc" data-ps="SF" onclick="App.setPStage(this,'SF')">SF</button>
+        <button class="fc" id="fc-unp" onclick="App.tUnpF()"><i class="ti ti-filter" style="font-size:13px" aria-hidden="true"></i> Unpredicted</button>
+      </div>
+      <div id="pred-list"></div>
+    </div>
+
+    <!-- VENUES -->
+    <div id="v-venues" class="view">
+      <div style="padding:10px 14px 4px">
+        <div style="font-size:var(--fs-md);font-weight:700;color:var(--tx)">Watch parties near you</div>
+        <div style="font-size:var(--fs-sm);color:var(--tx3);margin-top:2px;font-weight:500">30-mile radius from Redmond, WA · sourced June 2026</div>
+      </div>
+      <div class="fstrip">
+        <button class="fc active" id="vf-all" onclick="App.setVF('all')">All venues</button>
+        <button class="fc" id="vf-close" onclick="App.setVF('close')">📍 Closest first</button>
+        <button class="fc" id="vf-official" onclick="App.setVF('official')">🏆 Official Fan Zones</button>
+        <button class="fc" id="vf-free" onclick="App.setVF('free')">Free entry</button>
+        <button class="fc" id="vf-fav" onclick="App.setVF('fav')"><i class="ti ti-star" style="font-size:13px" aria-hidden="true"></i> Saved</button>
+      </div>
+      <div class="venue-note" id="venue-count">Loading venues…</div>
+      <div id="venue-list" style="padding:0 14px;display:flex;flex-direction:column;gap:8px;padding-bottom:8px"></div>
+    </div>
+
+    <!-- MY PLAN -->
+    <div id="v-myplan" class="view">
+      <div id="plan-hdr"></div>
+      <div id="plan-donut"></div>
+      <div id="plan-share"></div>
+      <div id="plan-ics"></div>
+      <div id="plan-list"></div>
+    </div>
+
+  </main>
+
+  <nav class="bnav">
+    <div class="nind" id="nind" aria-hidden="true"></div>
+    <button class="ntab active" id="tab-schedule" onclick="App.sw('schedule')"><i class="ti ti-list" aria-hidden="true"></i><span>Schedule</span></button>
+    <button class="ntab" id="tab-calendar" onclick="App.sw('calendar')"><i class="ti ti-calendar" aria-hidden="true"></i><span>Calendar</span></button>
+    <button class="ntab" id="tab-standings" onclick="App.sw('standings')"><i class="ti ti-trophy" aria-hidden="true"></i><span>Standings</span></button>
+    <button class="ntab" id="tab-predictions" onclick="App.sw('predictions')"><i class="ti ti-target" aria-hidden="true"></i><span>Predict</span></button>
+    <button class="ntab" id="tab-venues" onclick="App.sw('venues')"><i class="ti ti-map-pin" aria-hidden="true"></i><span>Venues</span></button>
+    <button class="ntab" id="tab-myplan" onclick="App.sw('myplan')"><i class="ti ti-star" aria-hidden="true"></i><span>My plan</span></button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// ── SUPABASE INLINE CLIENT ────────────────────────────────────
+const _SB_URL = window.__WC_CONFIG__?.supabaseUrl || '';
+const _SB_KEY = window.__WC_CONFIG__?.supabaseKey || '';
+const supabase = (_SB_URL && _SB_KEY)
+  ? window.supabase.createClient(_SB_URL, _SB_KEY, {
+      auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
+    })
+  : null;
+
+async function signInWithGoogle(){
+  if(!supabase){ alert('Supabase not configured. Add env vars in Vercel settings.'); return; }
+  await supabase.auth.signInWithOAuth({
+    provider:'google',
+    options:{
+      redirectTo: window.location.origin + '/',
+      queryParams: { prompt:'select_account' }
+    }
+  });
+}
+async function sbOut(){ if(supabase) await supabase.auth.signOut(); }
+
+async function loadAllUserData(userId){
+  const [p,e,f] = await Promise.all([
+    supabase.from('predictions').select('match_id,home_score,away_score,predicted_winner').eq('user_id',userId),
+    supabase.from('events').select('match_id,event_type').eq('user_id',userId),
+    supabase.from('favorites').select('match_id').eq('user_id',userId),
+  ]);
+  const preds = Object.fromEntries((p.data||[]).map(r=>[r.match_id,{h:r.home_score,a:r.away_score,w:r.predicted_winner}]));
+  const evts  = Object.fromEntries((e.data||[]).map(r=>[r.match_id,r.event_type]));
+  const favs  = new Set((f.data||[]).map(r=>r.match_id));
+  return { preds, evts, favs };
+}
+async function savePrediction(userId,matchId,hs,as_,w){
+  if(!supabase) return;
+  await supabase.from('predictions').upsert({
+    user_id:userId, match_id:matchId,
+    home_score:parseInt(hs), away_score:parseInt(as_),
+    predicted_winner: w||null,
+    updated_at: new Date().toISOString()
+  },{onConflict:'user_id,match_id'});
+}
+async function saveEvent(userId,matchId,eventType){
+  if(!supabase) return;
+  if(!eventType){
+    await supabase.from('events').delete().eq('user_id',userId).eq('match_id',matchId);
+    return;
+  }
+  await supabase.from('events').upsert({
+    user_id:userId, match_id:matchId, event_type:eventType,
+    updated_at: new Date().toISOString()
+  },{onConflict:'user_id,match_id'});
+}
+async function toggleFavorite(userId,matchId,isFav){
+  if(!supabase) return;
+  if(isFav) await supabase.from('favorites').insert({user_id:userId,match_id:matchId});
+  else await supabase.from('favorites').delete().eq('user_id',userId).eq('match_id',matchId);
+}
+async function createShareLink(userId,displayName,predictions){
+  if(!supabase) throw new Error('No Supabase');
+  const slug = Math.random().toString(36).slice(2,10);
+  await supabase.from('shared_snapshots').insert({user_id:userId,slug,display_name:displayName,predictions});
+  return window.location.origin + '/share/' + slug;
+}
+async function loadSharedSnapshot(slug){
+  if(!supabase) throw new Error('No Supabase');
+  const {data,error} = await supabase.from('shared_snapshots')
+    .select('display_name,predictions,created_at').eq('slug',slug).single();
+  if(error) throw error;
+  return data;
+}
+
+// ── THEME ─────────────────────────────────────────────────────
+function getIsDark(){
+  const a=document.documentElement.getAttribute('data-theme');
+  if(a==='dark')return true;if(a==='light')return false;
+  return window.matchMedia('(prefers-color-scheme:dark)').matches;
+}
+function applyThemeUI(){
+  const d=getIsDark();
+  document.getElementById('theme-icon').className=d?'ti ti-sun':'ti ti-moon';
+  document.getElementById('theme-lbl').textContent=d?'Light':'Dark';
+}
+function toggleTheme(){
+  const a=document.documentElement.getAttribute('data-theme');
+  const next=a==='dark'?'light':a==='light'?null:'dark';
+  next?document.documentElement.setAttribute('data-theme',next):document.documentElement.removeAttribute('data-theme');
+  applyThemeUI();
+  try{localStorage.setItem('wc26_theme',next||'auto');}catch(e){}
+}
+function initTheme(){
+  try{const s=localStorage.getItem('wc26_theme');if(s&&s!=='auto')document.documentElement.setAttribute('data-theme',s);}catch(e){}
+  applyThemeUI();
+}
+window.toggleTheme=toggleTheme;
+initTheme();
+
+// ── CONSTANTS ─────────────────────────────────────────────────
+const TODAY=new Date(2026,5,9);
+const SEA_IDS=new Set([14,29,50,65,82,94]);
+const GROUPS=['A','B','C','D','E','F','G','H','I','J','K','L'];
+const FB_BASE='https://v3.football.api-sports.io';
+const FB_KEY=window.__WC_CONFIG__?.footballApiKey||'';
+const WC_LEAGUE=1,WC_SEASON=2026;
+
+const FLAGS={
+  'Mexico':'🇲🇽','South Africa':'🇿🇦','South Korea':'🇰🇷','Czechia':'🇨🇿',
+  'Canada':'🇨🇦','Bosnia & Herz.':'🇧🇦','USA':'🇺🇸','Paraguay':'🇵🇾',
+  'Qatar':'🇶🇦','Switzerland':'🇨🇭','Brazil':'🇧🇷','Morocco':'🇲🇦',
+  'Haiti':'🇭🇹','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Australia':'🇦🇺','Türkiye':'🇹🇷',
+  'Germany':'🇩🇪','Curaçao':'🇨🇼','Netherlands':'🇳🇱','Japan':'🇯🇵',
+  'Ivory Coast':'🇨🇮','Ecuador':'🇪🇨','Sweden':'🇸🇪','Tunisia':'🇹🇳',
+  'Spain':'🇪🇸','Cape Verde':'🇨🇻','Belgium':'🇧🇪','Egypt':'🇪🇬',
+  'Saudi Arabia':'🇸🇦','Uruguay':'🇺🇾','Iran':'🇮🇷','New Zealand':'🇳🇿',
+  'France':'🇫🇷','Senegal':'🇸🇳','Iraq':'🇮🇶','Norway':'🇳🇴',
+  'Argentina':'🇦🇷','Algeria':'🇩🇿','Austria':'🇦🇹','Jordan':'🇯🇴',
+  'Portugal':'🇵🇹','DR Congo':'🇨🇩','England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croatia':'🇭🇷',
+  'Ghana':'🇬🇭','Panama':'🇵🇦','Uzbekistan':'🇺🇿','Colombia':'🇨🇴',
+};
+const flag=t=>FLAGS[t]||'🏳️';
+const COL=new Set(['Colombia']);
+const USA=new Set(['USA']);
+
+const VENUES=[
+  {id:'v01',name:'Flatstick Pub — Redmond',area:'Redmond',dist:0.5,type:'bar',official:false,free:false,address:'7530 164th Ave NE Ste A108, Redmond, WA 98052',phone:'+1 425-507-8349',rating:4.5,desc:'Local craft beer + indoor mini golf. Showing all matches including early games. Family-friendly until 9pm.',tags:['All matches','Family-friendly','Craft beer','Mini golf'],hours:'Mon 9am–11pm · Fri–Sat until 1am',url:'https://flatstickpub.com',maps:'https://maps.google.com/?q=Flatstick+Pub+Redmond+WA'},
+  {id:'v02',name:'Flatstick Pub — Kirkland',area:'Kirkland',dist:4.2,type:'bar',official:false,free:false,address:'15 Lake St Ste 100, Kirkland, WA 98033',phone:'+1 425-242-1618',rating:4.4,desc:'Waterfront on Lake Washington. All matches, rotating WA craft beers, lakeside patio.',tags:['All matches','Waterfront','Craft beer','Mini golf'],hours:'Mon–Thu 12pm–11pm · Fri–Sat 12pm–1am',url:'https://flatstickpub.com',maps:'https://maps.google.com/?q=Flatstick+Pub+Kirkland+WA'},
+  {id:'v03',name:'Redmond Town Center Fan Zone',area:'Redmond',dist:0.3,type:'outdoor',official:true,free:true,address:'7525 166th Ave NE, Redmond, WA 98052',rating:4.4,desc:'Official Eastside destination — outdoor big screen, family activities. Hosting all Seattle matches + select games. Free.',tags:['Official Fan Zone','Free entry','Outdoor','All ages','Big screen'],hours:'Match days — check redmond.gov',url:'https://redmond.gov',maps:'https://maps.google.com/?q=Redmond+Town+Center+WA'},
+  {id:'v04',name:'Bellevue Brewing Co — Spring District',area:'Bellevue',dist:8.1,type:'bar',official:false,free:false,address:'12190 NE District Wy, Bellevue, WA 98005',phone:'+1 425-497-8686',rating:4.5,desc:'Every match. Exclusive WC beer "Bellevue Baller" with ingredients from all 3 host countries. Covered outdoor seating.',tags:['All matches','Exclusive WC beer','Outdoor patio'],hours:'Daily 11:30am–10pm (Fri 11pm)',url:'https://bellevuebeer.com',maps:'https://maps.google.com/?q=Bellevue+Brewing+Spring+District+WA'},
+  {id:'v05',name:'Mirra Social Entertainment',area:'Bellevue',dist:9.4,type:'venue',official:false,free:false,address:'500 Bellevue Way NE Suite 310, Bellevue, WA 98004',phone:'+1 425-459-2324',rating:4.4,desc:'Immersive watch-party at Bellevue Collection. Massive digital screens, VR games. Reservations recommended.',tags:['Immersive','Reservations','VR games','Bellevue Collection'],hours:'Mon–Thu 4pm–10pm · Fri–Sat 4pm–2am',url:'https://mirrasocial.com',maps:'https://maps.google.com/?q=Mirra+Bellevue+WA'},
+  {id:'v06',name:'Seattle Center Armory — Let\'s Play SEA \'26',area:'Seattle Center',dist:15.2,type:'outdoor',official:true,free:true,address:'305 Harrison St, Seattle, WA 98109',rating:4.6,desc:'Primary official daily public viewing site June 14–26. Large screens, food, Global Marketplace, cultural programming. FREE.',tags:['Official','Free','Daily Jun 14–26','Family-friendly','Indoor'],hours:'June 14–26 · Daily during matches',url:'https://seattlecenter.com',maps:'https://maps.google.com/?q=Seattle+Center+Armory+WA'},
+  {id:'v07',name:'Pier 62 — Seattle Soccer Celebration',area:'Seattle Waterfront',dist:16.1,type:'outdoor',official:true,free:true,address:'1951 Alaskan Way, Seattle, WA 98101',rating:4.7,desc:'Hosted by Seattle Sounders & Reign. Free pier viewings + ticketed floating barge with 18\'×30\' LED wall on Elliott Bay. June 11–July 6.',tags:['Sounders FC','Free pier viewing','Barge (ticketed)','Elliott Bay','Jun 11–Jul 6'],hours:'June 11–July 6 · Match days',url:'https://soundersfc.com/seattle-soccer-celebration',maps:'https://maps.google.com/?q=Pier+62+Seattle+WA'},
+  {id:'v08',name:'Kangaroo & Kiwi Pub',area:'Ballard, Seattle',dist:13.5,type:'bar',official:false,free:false,address:'2026 NW Market St, Seattle, WA 98107',phone:'+1 206-297-0507',rating:4.2,desc:'Australian-owned pub showing every game. Hotspot for USA vs Australia June 19. Large venue, massive energy.',tags:['Every game','Australian pub','USA vs Australia','Large venue'],hours:'Mon–Thu 11:30am–12am · Fri–Sat until 2am',url:'https://kangarooandkiwi.com',maps:'https://maps.google.com/?q=Kangaroo+Kiwi+Seattle+WA'},
+  {id:'v09',name:'George & Dragon Pub',area:'Fremont, Seattle',dist:13.1,type:'bar',official:false,free:false,address:'206 N 36th St, Seattle, WA 98103',phone:'+1 206-695-2768',rating:4.4,desc:'Seattle\'s premier soccer supporters pub. Opens early for morning kickoffs. Wall-to-wall TVs, legendary atmosphere.',tags:['Every game','Early morning games','Soccer culture'],hours:'Opens 6:30am Sat for morning kickoffs',url:'',maps:'https://maps.google.com/?q=George+Dragon+Pub+Seattle+WA'},
+  {id:'v10',name:'Elliott Bay Brewing — Capitol Hill',area:'Capitol Hill, Seattle',dist:14.3,type:'bar',official:true,free:false,address:'1221 E Pike St, Seattle, WA 98122',rating:4.5,desc:'Official Fan Zone. Seattle matches + select others. WC brews: "Equalizer", "PK Pilsner", "Red Card Ale". Free limited-edition glass for USA/knockout games.',tags:['Official Fan Zone','WC craft beers','Collectable glasses','Family-friendly'],hours:'Daily from 11am',url:'https://elliottbaybrewing.com',maps:'https://maps.google.com/?q=Elliott+Bay+Brewing+Capitol+Hill+Seattle'},
+  {id:'v11',name:'Marymoor Park — World Cup Final',area:'Redmond',dist:2.1,type:'outdoor',official:true,free:true,address:'6046 W Lake Sammamish Pkwy NE, Redmond, WA 98052',rating:4.8,desc:'FREE public watch party for the World Cup Final, July 19, 10am–3pm. Community event, all ages, open air.',tags:['Final only','Free entry','July 19','All ages','Community'],hours:'July 19 only · 10am–3pm',url:'',maps:'https://maps.google.com/?q=Marymoor+Park+Redmond+WA'},
+  {id:'v12',name:'Paseo — Near Lumen Field',area:'SoDo, Seattle',dist:15.8,type:'outdoor',official:false,free:false,address:'Near Lumen Field, SoDo, Seattle, WA',rating:4.6,desc:'Full month of watch parties near the stadium. Latin & Caribbean food, tiki cocktails, great energy.',tags:['Near Lumen Field','Latin food','Full tournament','Tiki cocktails'],hours:'June 11–July 19 · Match days',url:'https://seattlefwc26.org',maps:'https://maps.google.com/?q=Paseo+Seattle+SoDo'},
+];
+
+const MATCHES=[
+  // ── GROUP STAGE — all times native PDT (UTC-7) ───────────────
+  // Jun 11
+  {id:1,  date:'2026-06-11',time:'12:00',group:'A',home:'Mexico',       away:'South Africa', stage:'Group',venue:'Estadio Azteca, Mexico City'},
+  {id:2,  date:'2026-06-11',time:'19:00',group:'A',home:'South Korea',  away:'Czechia',      stage:'Group',venue:'Estadio Akron, Guadalajara'},
+  // Jun 12
+  {id:3,  date:'2026-06-12',time:'12:00',group:'B',home:'Canada',       away:'Bosnia & Herz.',stage:'Group',venue:'BMO Field, Toronto'},
+  {id:4,  date:'2026-06-12',time:'18:00',group:'D',home:'USA',          away:'Paraguay',     stage:'Group',venue:'SoFi Stadium, Los Angeles'},
+  // Jun 13
+  {id:5,  date:'2026-06-13',time:'12:00',group:'B',home:'Qatar',        away:'Switzerland',  stage:'Group',venue:"Levi's Stadium, San Jose"},
+  {id:6,  date:'2026-06-13',time:'15:00',group:'C',home:'Brazil',       away:'Morocco',      stage:'Group',venue:'MetLife Stadium, New York'},
+  {id:7,  date:'2026-06-13',time:'18:00',group:'C',home:'Haiti',        away:'Scotland',     stage:'Group',venue:'Gillette Stadium, Boston'},
+  {id:8,  date:'2026-06-13',time:'21:00',group:'D',home:'Australia',    away:'Türkiye',      stage:'Group',venue:'BC Place, Vancouver'},
+  // Jun 14
+  {id:9,  date:'2026-06-14',time:'10:00',group:'E',home:'Germany',      away:'Curaçao',      stage:'Group',venue:'NRG Stadium, Houston'},
+  {id:10, date:'2026-06-14',time:'13:00',group:'F',home:'Netherlands',  away:'Japan',        stage:'Group',venue:'AT&T Stadium, Dallas'},
+  {id:11, date:'2026-06-14',time:'16:00',group:'E',home:'Ivory Coast',  away:'Ecuador',      stage:'Group',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:12, date:'2026-06-14',time:'19:00',group:'F',home:'Sweden',       away:'Tunisia',      stage:'Group',venue:'Estadio BBVA, Monterrey'},
+  // Jun 15
+  {id:13, date:'2026-06-15',time:'09:00',group:'H',home:'Spain',        away:'Cape Verde',   stage:'Group',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:14, date:'2026-06-15',time:'12:00',group:'G',home:'Belgium',      away:'Egypt',        stage:'Group',venue:'Lumen Field, Seattle'},
+  {id:15, date:'2026-06-15',time:'15:00',group:'H',home:'Saudi Arabia', away:'Uruguay',      stage:'Group',venue:'Hard Rock Stadium, Miami'},
+  {id:16, date:'2026-06-15',time:'18:00',group:'G',home:'Iran',         away:'New Zealand',  stage:'Group',venue:'SoFi Stadium, Los Angeles'},
+  // Jun 16
+  {id:17, date:'2026-06-16',time:'12:00',group:'I',home:'France',       away:'Senegal',      stage:'Group',venue:'MetLife Stadium, New York'},
+  {id:18, date:'2026-06-16',time:'15:00',group:'I',home:'Iraq',         away:'Norway',       stage:'Group',venue:'Gillette Stadium, Boston'},
+  {id:19, date:'2026-06-16',time:'18:00',group:'J',home:'Argentina',    away:'Algeria',      stage:'Group',venue:'Arrowhead Stadium, Kansas City'},
+  {id:20, date:'2026-06-16',time:'21:00',group:'J',home:'Austria',      away:'Jordan',       stage:'Group',venue:"Levi's Stadium, San Jose"},
+  // Jun 17
+  {id:21, date:'2026-06-17',time:'10:00',group:'K',home:'Portugal',     away:'DR Congo',     stage:'Group',venue:'NRG Stadium, Houston'},
+  {id:22, date:'2026-06-17',time:'13:00',group:'L',home:'England',      away:'Croatia',      stage:'Group',venue:'AT&T Stadium, Dallas'},
+  {id:23, date:'2026-06-17',time:'16:00',group:'L',home:'Ghana',        away:'Panama',       stage:'Group',venue:'BMO Field, Toronto'},
+  {id:24, date:'2026-06-17',time:'19:00',group:'K',home:'Uzbekistan',   away:'Colombia',     stage:'Group',venue:'Estadio Azteca, Mexico City'},
+  // Jun 18
+  {id:25, date:'2026-06-18',time:'09:00',group:'A',home:'Czechia',      away:'South Africa', stage:'Group',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:26, date:'2026-06-18',time:'12:00',group:'B',home:'Switzerland',  away:'Bosnia & Herz.',stage:'Group',venue:'SoFi Stadium, Los Angeles'},
+  {id:27, date:'2026-06-18',time:'15:00',group:'B',home:'Canada',       away:'Qatar',        stage:'Group',venue:'BC Place, Vancouver'},
+  {id:28, date:'2026-06-18',time:'18:00',group:'A',home:'Mexico',       away:'South Korea',  stage:'Group',venue:'Estadio Akron, Guadalajara'},
+  // Jun 19
+  {id:29, date:'2026-06-19',time:'12:00',group:'D',home:'USA',          away:'Australia',    stage:'Group',venue:'Lumen Field, Seattle'},
+  {id:30, date:'2026-06-19',time:'15:00',group:'C',home:'Scotland',     away:'Morocco',      stage:'Group',venue:'Gillette Stadium, Boston'},
+  {id:31, date:'2026-06-19',time:'18:00',group:'C',home:'Brazil',       away:'Haiti',        stage:'Group',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:32, date:'2026-06-19',time:'21:00',group:'D',home:'Türkiye',      away:'Paraguay',     stage:'Group',venue:"Levi's Stadium, San Jose"},
+  // Jun 20
+  {id:33, date:'2026-06-20',time:'10:00',group:'F',home:'Netherlands',  away:'Sweden',       stage:'Group',venue:'NRG Stadium, Houston'},
+  {id:34, date:'2026-06-20',time:'13:00',group:'E',home:'Germany',      away:'Ivory Coast',  stage:'Group',venue:'BMO Field, Toronto'},
+  {id:35, date:'2026-06-20',time:'17:00',group:'E',home:'Ecuador',      away:'Curaçao',      stage:'Group',venue:'Arrowhead Stadium, Kansas City'},
+  {id:36, date:'2026-06-20',time:'21:00',group:'F',home:'Tunisia',      away:'Japan',        stage:'Group',venue:'Estadio BBVA, Monterrey'},
+  // Jun 21
+  {id:37, date:'2026-06-21',time:'09:00',group:'H',home:'Spain',        away:'Saudi Arabia', stage:'Group',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:38, date:'2026-06-21',time:'12:00',group:'G',home:'Belgium',      away:'Iran',         stage:'Group',venue:'SoFi Stadium, Los Angeles'},
+  {id:39, date:'2026-06-21',time:'15:00',group:'H',home:'Uruguay',      away:'Cape Verde',   stage:'Group',venue:'Hard Rock Stadium, Miami'},
+  {id:40, date:'2026-06-21',time:'18:00',group:'G',home:'New Zealand',  away:'Egypt',        stage:'Group',venue:'BC Place, Vancouver'},
+  // Jun 22
+  {id:41, date:'2026-06-22',time:'10:00',group:'J',home:'Argentina',    away:'Austria',      stage:'Group',venue:'AT&T Stadium, Dallas'},
+  {id:42, date:'2026-06-22',time:'14:00',group:'I',home:'France',       away:'Iraq',         stage:'Group',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:43, date:'2026-06-22',time:'17:00',group:'I',home:'Norway',       away:'Senegal',      stage:'Group',venue:'MetLife Stadium, New York'},
+  {id:44, date:'2026-06-22',time:'20:00',group:'J',home:'Jordan',       away:'Algeria',      stage:'Group',venue:"Levi's Stadium, San Jose"},
+  // Jun 23
+  {id:45, date:'2026-06-23',time:'10:00',group:'K',home:'Portugal',     away:'Uzbekistan',   stage:'Group',venue:'NRG Stadium, Houston'},
+  {id:46, date:'2026-06-23',time:'13:00',group:'L',home:'England',      away:'Ghana',        stage:'Group',venue:'Gillette Stadium, Boston'},
+  {id:47, date:'2026-06-23',time:'16:00',group:'L',home:'Panama',       away:'Croatia',      stage:'Group',venue:'BMO Field, Toronto'},
+  {id:48, date:'2026-06-23',time:'19:00',group:'K',home:'Colombia',     away:'DR Congo',     stage:'Group',venue:'Estadio Akron, Guadalajara'},
+  // Jun 24
+  {id:49, date:'2026-06-24',time:'12:00',group:'B',home:'Switzerland',  away:'Canada',       stage:'Group',venue:'BC Place, Vancouver'},
+  {id:50, date:'2026-06-24',time:'12:00',group:'B',home:'Bosnia & Herz.',away:'Qatar',       stage:'Group',venue:'Lumen Field, Seattle'},
+  {id:51, date:'2026-06-24',time:'15:00',group:'C',home:'Scotland',     away:'Brazil',       stage:'Group',venue:'Hard Rock Stadium, Miami'},
+  {id:52, date:'2026-06-24',time:'15:00',group:'C',home:'Morocco',      away:'Haiti',        stage:'Group',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:53, date:'2026-06-24',time:'18:00',group:'A',home:'Czechia',      away:'Mexico',       stage:'Group',venue:'Estadio Azteca, Mexico City'},
+  {id:54, date:'2026-06-24',time:'18:00',group:'A',home:'South Africa', away:'South Korea',  stage:'Group',venue:'Estadio BBVA, Monterrey'},
+  // Jun 25
+  {id:55, date:'2026-06-25',time:'10:00',group:'E',home:'Curaçao',      away:'Ivory Coast',  stage:'Group',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:56, date:'2026-06-25',time:'13:00',group:'E',home:'Ecuador',      away:'Germany',      stage:'Group',venue:'MetLife Stadium, New York'},
+  {id:57, date:'2026-06-25',time:'13:00',group:'F',home:'Japan',        away:'Sweden',       stage:'Group',venue:'AT&T Stadium, Dallas'},
+  {id:58, date:'2026-06-25',time:'16:00',group:'F',home:'Tunisia',      away:'Netherlands',  stage:'Group',venue:'Arrowhead Stadium, Kansas City'},
+  {id:59, date:'2026-06-25',time:'19:00',group:'D',home:'Türkiye',      away:'USA',          stage:'Group',venue:'SoFi Stadium, Los Angeles'},
+  {id:60, date:'2026-06-25',time:'19:00',group:'D',home:'Paraguay',     away:'Australia',    stage:'Group',venue:"Levi's Stadium, San Jose"},
+  // Jun 26
+  {id:61, date:'2026-06-26',time:'09:00',group:'I',home:'Norway',       away:'France',       stage:'Group',venue:'Gillette Stadium, Boston'},
+  {id:62, date:'2026-06-26',time:'09:00',group:'I',home:'Senegal',      away:'Iraq',         stage:'Group',venue:'BMO Field, Toronto'},
+  {id:63, date:'2026-06-26',time:'14:00',group:'H',home:'Cape Verde',   away:'Saudi Arabia', stage:'Group',venue:'NRG Stadium, Houston'},
+  {id:64, date:'2026-06-26',time:'14:00',group:'H',home:'Uruguay',      away:'Spain',        stage:'Group',venue:'Estadio Akron, Guadalajara'},
+  {id:65, date:'2026-06-26',time:'17:00',group:'G',home:'Egypt',        away:'Iran',         stage:'Group',venue:'Lumen Field, Seattle'},
+  {id:66, date:'2026-06-26',time:'17:00',group:'G',home:'New Zealand',  away:'Belgium',      stage:'Group',venue:'BC Place, Vancouver'},
+  // Jun 27
+  {id:67, date:'2026-06-27',time:'11:00',group:'L',home:'Panama',       away:'England',      stage:'Group',venue:'MetLife Stadium, New York'},
+  {id:68, date:'2026-06-27',time:'11:00',group:'L',home:'Croatia',      away:'Ghana',        stage:'Group',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:69, date:'2026-06-27',time:'13:30',group:'K',home:'Colombia',     away:'Portugal',     stage:'Group',venue:'Hard Rock Stadium, Miami'},
+  {id:70, date:'2026-06-27',time:'13:30',group:'K',home:'DR Congo',     away:'Uzbekistan',   stage:'Group',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:71, date:'2026-06-27',time:'16:00',group:'J',home:'Algeria',      away:'Austria',      stage:'Group',venue:'Arrowhead Stadium, Kansas City'},
+  {id:72, date:'2026-06-27',time:'16:00',group:'J',home:'Jordan',       away:'Argentina',    stage:'Group',venue:'AT&T Stadium, Dallas'},
+  // ── ROUND OF 32 ──────────────────────────────────────────────
+  {id:73, date:'2026-06-28',time:'09:00',group:'',home:'Runner-up A',  away:'Runner-up B',  stage:'R32',venue:'SoFi Stadium, Los Angeles'},
+  {id:74, date:'2026-06-29',time:'07:00',group:'',home:'Winner E',     away:'Best 3rd',     stage:'R32',venue:'Gillette Stadium, Boston'},
+  {id:75, date:'2026-06-29',time:'15:00',group:'',home:'Winner F',     away:'Runner-up C',  stage:'R32',venue:'Estadio BBVA, Monterrey'},
+  {id:76, date:'2026-06-29',time:'07:00',group:'',home:'Winner C',     away:'Runner-up F',  stage:'R32',venue:'NRG Stadium, Houston'},
+  {id:77, date:'2026-06-30',time:'11:00',group:'',home:'Winner I',     away:'Best 3rd',     stage:'R32',venue:'MetLife Stadium, New York'},
+  {id:78, date:'2026-06-30',time:'07:00',group:'',home:'Runner-up E',  away:'Runner-up I',  stage:'R32',venue:'AT&T Stadium, Dallas'},
+  {id:79, date:'2026-06-30',time:'15:00',group:'',home:'Winner A',     away:'Best 3rd',     stage:'R32',venue:'Estadio Azteca, Mexico City'},
+  {id:80, date:'2026-07-01',time:'06:00',group:'',home:'Winner L',     away:'Best 3rd',     stage:'R32',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:81, date:'2026-07-01',time:'14:00',group:'',home:'Winner D',     away:'Best 3rd',     stage:'R32',venue:"Levi's Stadium, San Jose"},
+  {id:82, date:'2026-07-01',time:'10:00',group:'',home:'Winner G',     away:'Best 3rd',     stage:'R32',venue:'Lumen Field, Seattle'},
+  {id:83, date:'2026-07-02',time:'13:00',group:'',home:'Runner-up K',  away:'Runner-up L',  stage:'R32',venue:'BMO Field, Toronto'},
+  {id:84, date:'2026-07-02',time:'09:00',group:'',home:'Winner H',     away:'Runner-up J',  stage:'R32',venue:'SoFi Stadium, Los Angeles'},
+  {id:85, date:'2026-07-02',time:'17:00',group:'',home:'Winner B',     away:'Best 3rd',     stage:'R32',venue:'BC Place, Vancouver'},
+  {id:86, date:'2026-07-03',time:'12:00',group:'',home:'Winner J',     away:'Runner-up H',  stage:'R32',venue:'Hard Rock Stadium, Miami'},
+  {id:87, date:'2026-07-03',time:'15:30',group:'',home:'Winner K',     away:'Best 3rd',     stage:'R32',venue:'Arrowhead Stadium, Kansas City'},
+  {id:88, date:'2026-07-03',time:'08:00',group:'',home:'Runner-up D',  away:'Runner-up G',  stage:'R32',venue:'AT&T Stadium, Dallas'},
+  // ── ROUND OF 16 ──────────────────────────────────────────────
+  {id:89, date:'2026-07-04',time:'11:00',group:'',home:'R16 Match 1', away:'',              stage:'R16',venue:'Lincoln Fin. Field, Philadelphia'},
+  {id:90, date:'2026-07-04',time:'07:00',group:'',home:'R16 Match 2', away:'',              stage:'R16',venue:'NRG Stadium, Houston'},
+  {id:91, date:'2026-07-05',time:'10:00',group:'',home:'R16 Match 3', away:'',              stage:'R16',venue:'MetLife Stadium, New York'},
+  {id:92, date:'2026-07-05',time:'14:00',group:'',home:'R16 Match 4', away:'',              stage:'R16',venue:'Estadio Azteca, Mexico City'},
+  {id:93, date:'2026-07-06',time:'09:00',group:'',home:'R16 Match 5', away:'',              stage:'R16',venue:'AT&T Stadium, Dallas'},
+  {id:94, date:'2026-07-06',time:'14:00',group:'',home:'R16 Match 6', away:'',              stage:'R16',venue:'Lumen Field, Seattle'},
+  {id:95, date:'2026-07-07',time:'06:00',group:'',home:'R16 Match 7', away:'',              stage:'R16',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:96, date:'2026-07-07',time:'10:00',group:'',home:'R16 Match 8', away:'',              stage:'R16',venue:'BC Place, Vancouver'},
+  // ── QUARTERFINALS ────────────────────────────────────────────
+  {id:97, date:'2026-07-09',time:'10:00',group:'',home:'QF 1',        away:'',              stage:'QF',venue:'Gillette Stadium, Boston'},
+  {id:98, date:'2026-07-10',time:'09:00',group:'',home:'QF 2',        away:'',              stage:'QF',venue:'SoFi Stadium, Los Angeles'},
+  {id:99, date:'2026-07-11',time:'11:00',group:'',home:'QF 3',        away:'',              stage:'QF',venue:'Hard Rock Stadium, Miami'},
+  {id:100,date:'2026-07-11',time:'15:00',group:'',home:'QF 4',        away:'',              stage:'QF',venue:'Arrowhead Stadium, Kansas City'},
+  // ── SEMIFINALS ───────────────────────────────────────────────
+  {id:101,date:'2026-07-14',time:'09:00',group:'',home:'Semifinal 1', away:'',              stage:'SF',venue:'AT&T Stadium, Dallas'},
+  {id:102,date:'2026-07-15',time:'09:00',group:'',home:'Semifinal 2', away:'',              stage:'SF',venue:'Mercedes-Benz Stadium, Atlanta'},
+  {id:103,date:'2026-07-18',time:'11:00',group:'',home:'3rd Place',   away:'',              stage:'SF',venue:'Hard Rock Stadium, Miami'},
+  // ── FINAL ────────────────────────────────────────────────────
+  {id:104,date:'2026-07-19',time:'12:00',group:'',home:'CHAMPION',    away:'Runner-up',     stage:'Final',venue:'MetLife Stadium, East Rutherford, NJ'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────
+const S={stageF:'',favF:false,planF:false,seaF:false,unpF:false,liveF:false,colF:false,usaF:false,pstageF:'',calMo:5,calYr:2026,selDay:null,user:null,selGroup:'A',liveScores:{},standings:{},venueFilter:'all',favVenues:new Set()};
+const D={preds:{},evts:{},favs:new Set()};
+let donutChart=null,grpChart=null;
+
+// ── LOCAL STORAGE ──────────────────────────────────────────────
+function lsSave(){try{localStorage.setItem('wc26_p',JSON.stringify(D.preds));localStorage.setItem('wc26_e',JSON.stringify(D.evts));localStorage.setItem('wc26_f',JSON.stringify([...D.favs]));localStorage.setItem('wc26_fv',JSON.stringify([...S.favVenues]));}catch(e){}}
+function lsLoad(){try{const p=localStorage.getItem('wc26_p');if(p)D.preds=JSON.parse(p);const e=localStorage.getItem('wc26_e');if(e)D.evts=JSON.parse(e);const f=localStorage.getItem('wc26_f');if(f)D.favs=new Set(JSON.parse(f));const fv=localStorage.getItem('wc26_fv');if(fv)S.favVenues=new Set(JSON.parse(fv));}catch(e){}}
+
+// ── API CACHE ─────────────────────────────────────────────────
+const _cache={};
+async function apiGet(path,ttl=10){
+  const now=Date.now();
+  if(_cache[path]&&now-_cache[path].ts<ttl*60000)return _cache[path].data;
+  if(!FB_KEY)throw new Error('No API key');
+  const res=await fetch(`${FB_BASE}${path}`,{headers:{'x-apisports-key':FB_KEY}});
+  if(!res.ok)throw new Error(`API ${res.status}`);
+  const data=await res.json();_cache[path]={data,ts:now};return data;
+}
+
+// ── LIVE SCORES ────────────────────────────────────────────────
+async function fetchLiveScores(){
+  try{
+    const data=await apiGet(`/fixtures?league=${WC_LEAGUE}&season=${WC_SEASON}&live=all`,1);
+    const fixtures=data.response||[];
+    S.liveScores={};
+    fixtures.forEach(f=>{
+      const hn=(f.teams?.home?.name||'').toLowerCase();
+      const local=MATCHES.find(m=>m.home.toLowerCase().startsWith(hn.slice(0,5))||hn.startsWith(m.home.toLowerCase().slice(0,5)));
+      if(local)S.liveScores[local.id]={home:f.goals?.home??0,away:f.goals?.away??0,status:f.fixture?.status?.short||'LIVE',minute:f.fixture?.status?.elapsed||''};
+    });
+    renderTicker(fixtures);rSched();
+  }catch(e){renderTicker([]);}
+}
+
+async function fetchStandings(force=false){
+  if(force)delete _cache[`/standings?league=${WC_LEAGUE}&season=${WC_SEASON}`];
+  document.getElementById('standings-updated').textContent='Updating…';
+  try{
+    const data=await apiGet(`/standings?league=${WC_LEAGUE}&season=${WC_SEASON}`,30);
+    const groups=data.response?.[0]?.league?.standings||[];
+    S.standings={};
+    groups.forEach(grpArr=>{
+      if(!grpArr?.length)return;
+      const letter=grpArr[0]?.group?.replace('Group ','');if(!letter)return;
+      S.standings[letter]=grpArr.map(t=>({team:t.team?.name||'',P:t.all?.played||0,W:t.all?.win||0,D:t.all?.draw||0,L:t.all?.lose||0,GF:t.all?.goals?.for||0,GA:t.all?.goals?.against||0,GD:t.goalsDiff||0,Pts:t.points||0}));
+    });
+    document.getElementById('standings-updated').textContent=`Updated ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
+  }catch(e){document.getElementById('standings-updated').textContent=FB_KEY?'Update failed — tap refresh':'Add FOOTBALL_API_KEY in Vercel to enable live standings';}
+  buildGroupBtns();renderStandings(S.selGroup);renderGrpChart();
+}
+
+function renderTicker(fixtures){
+  const t=document.getElementById('score-ticker');
+  if(!fixtures?.length){
+    const now=new Date();
+    const up=MATCHES.filter(m=>SEA_IDS.has(m.id)&&new Date(m.date+'T'+m.time+':00-07:00')>now).slice(0,3);
+    t.innerHTML=up.length?up.map(m=>`<div class="tick-card"><div><div class="tick-teams">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</div><div class="tick-status">📍 ${ptTime(m)}</div></div></div>`).join(''):'<span class="tick-empty">Live scores appear here during matches</span>';
+    return;
+  }
+  t.innerHTML=fixtures.map(f=>{
+    const el=f.fixture?.status?.elapsed,sh=f.fixture?.status?.short;
+    const st=sh==='HT'?'HT':el?`${el}'`:sh||'LIVE';
+    return `<div class="tick-card"><div><div class="tick-teams">${f.teams?.home?.name} vs ${f.teams?.away?.name}</div><div class="tick-status tick-live">${st}</div></div><div class="tick-score">${f.goals?.home??0}–${f.goals?.away??0}</div></div>`;
+  }).join('');
+}
+
+function buildGroupBtns(){document.getElementById('grp-btns').innerHTML=GROUPS.map(g=>`<button class="grp-btn${g===S.selGroup?' active':''}" onclick="App.selGroup('${g}')">${g}</button>`).join('');}
+function selGroup(g){S.selGroup=g;buildGroupBtns();renderStandings(g);}
+
+function renderStandings(g){
+  const rows=S.standings[g]||[];
+  const tbody=document.getElementById('standings-body');
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--tx4);font-size:var(--fs-sm)">${FB_KEY?`Group ${g} standings populate when matches begin`:'Add FOOTBALL_API_KEY in Vercel → Settings → Environment Variables'}</td></tr>`;return;}
+  tbody.innerHTML=rows.map((t,i)=>{
+    const pos=i+1;const cls=pos<=2?'pos-q':pos===3?'pos-m':'pos-out';
+    const gdC=t.GD>0?'var(--g3)':t.GD<0?'var(--rd2)':'var(--tx4)';
+    const isFan=COL.has(t.team)||USA.has(t.team);
+    return `<tr style="${isFan?`background:${COL.has(t.team)?'rgba(255,215,0,0.07)':'rgba(178,34,52,0.05)'}`:''}" >
+      <td><span class="pos-b ${cls}">${pos}</span></td>
+      <td style="font-weight:700">${flag(t.team)} ${t.team}</td>
+      <td style="text-align:center;color:var(--tx3)">${t.P}</td>
+      <td style="text-align:center;color:var(--g3);font-weight:700">${t.W}</td>
+      <td style="text-align:center;color:var(--tx3)">${t.D}</td>
+      <td style="text-align:center;color:var(--rd2)">${t.L}</td>
+      <td style="text-align:center;font-weight:700;color:${gdC}">${t.GD>0?'+':''}${t.GD}</td>
+      <td style="text-align:center;font-weight:700;font-size:16px">${t.Pts}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderGrpChart(){
+  const maxPts=GROUPS.map(g=>{const r=S.standings[g]||[];return r.length?Math.max(...r.map(t=>t.Pts)):0;});
+  const isDark=getIsDark();
+  const ctx=document.getElementById('grp-chart');if(!ctx)return;
+  if(grpChart)grpChart.destroy();
+  grpChart=new Chart(ctx,{type:'bar',data:{labels:GROUPS,datasets:[{data:maxPts,backgroundColor:maxPts.map((_,i)=>GROUPS[i]===S.selGroup?'#52B788':'rgba(82,183,136,.3)'),borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:isDark?'#98A08C':'#525C4A',font:{size:11,weight:'700'}}},y:{grid:{color:isDark?'rgba(255,255,255,.07)':'rgba(0,0,0,.07)'},ticks:{color:isDark?'#98A08C':'#525C4A',font:{size:11}},beginAtZero:true}}}});
+}
+
+// ── ICS ────────────────────────────────────────────────────────
+function toICSDate(ds,ts){const[y,mo,d]=ds.split('-');const[h,mi]=ts.split(':');const uh=(parseInt(h)+7)%24;const doff=(parseInt(h)+7)>=24?1:0;return `${y}${mo}${String(parseInt(d)+doff).padStart(2,'0')}T${String(uh).padStart(2,'0')}${mi}00Z`;}
+function buildICS(matches){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//WC2026 Seattle Tracker//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:⚽ World Cup 2026','X-WR-TIMEZONE:America/Los_Angeles'];
+  matches.forEach(m=>{
+    const ds=toICSDate(m.date,m.time);const de=toICSDate(m.date,`${String(parseInt(m.time.split(':')[0])+2).padStart(2,'0')}:00`);
+    const ev=D.evts[m.id];
+    const sum=ev==='party'?`🎉 Watch Party: ${mTitle(m)} | WC2026`:ev==='home'?`🏠 WC2026: ${mTitle(m)}`:`⚽ ${mTitle(m)} | WC2026`;
+    const desc=[mTitle(m),`Stage: ${m.stage}${m.group?' · Group '+m.group:''}`,`Venue: ${m.venue}`,`Kickoff: ${ptTime(m)}`,SEA_IDS.has(m.id)?'📍 Seattle — Lumen Field':''].filter(Boolean).join('\\n');
+    L.push('BEGIN:VEVENT',`UID:wc2026-${m.id}@tracker`,`DTSTART:${ds}`,`DTEND:${de}`,`SUMMARY:${sum}`,`DESCRIPTION:${desc}`,`LOCATION:${m.venue}`,'END:VEVENT');
+  });
+  L.push('END:VCALENDAR');return L.join('\r\n');
+}
+function dlICS(content,fname){const blob=new Blob([content],{type:'text/calendar;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fname;a.click();URL.revokeObjectURL(url);}
+function exportICS(type='planned'){
+  const map={all:MATCHES,seattle:MATCHES.filter(m=>SEA_IDS.has(m.id)),planned:MATCHES.filter(m=>D.evts[m.id]&&D.evts[m.id]!=='skip')};
+  const matches=map[type]||map.planned;
+  if(!matches.length){toast('Mark some games as Watch Party or Home first!');return;}
+  dlICS(buildICS(matches),`wc2026-${type}.ics`);
+  toast('📅 .ics downloaded — open to add to Apple Calendar');
+}
+function expGCal(){
+  const pl=MATCHES.filter(m=>D.evts[m.id]&&D.evts[m.id]!=='skip');if(!pl.length){toast('Mark some games first!');return;}
+  const m=pl[0];const[y,mo,d]=m.date.split('-');const[h,mn]=m.time.split(':');
+  const sdt=`${y}${mo}${d}T${h}${mn}00`;const eh=String(parseInt(h)+2).padStart(2,'0');const edt=`${y}${mo}${d}T${eh}${mn}00`;
+  window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`⚽ ${mTitle(m)} | WC2026`)}&dates=${sdt}/${edt}&location=${encodeURIComponent(m.venue)}`,'_blank');
+}
+function addOneCal(id){const m=MATCHES.find(x=>x.id===id);if(!m)return;dlICS(buildICS([m]),`${m.home.replace(/\s/g,'-')}-vs-${(m.away||'tbd').replace(/\s/g,'-')}.ics`);toast('📅 Match added to calendar!');}
+
+// ── VENUE CAL ─────────────────────────────────────────────────
+function addVenueToCal(vid){
+  const v=VENUES.find(x=>x.id===vid);if(!v)return;
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//WC2026 Seattle Tracker//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:wc2026-venue-${vid}@tracker`,`DTSTART:20260611T150000Z`,`DTEND:20260719T030000Z`,`SUMMARY:⚽ ${v.name} — WC2026 Watch Parties`,`DESCRIPTION:${v.desc}\\n\\n${v.tags.join(', ')}\\n\\nHours: ${v.hours}`,`LOCATION:${v.address}`,'END:VEVENT','END:VCALENDAR'];
+  dlICS(L.join('\r\n'),`watch-party-${v.id}.ics`);toast(`📅 ${v.name} added to calendar!`);
+}
+function favVenue(vid){S.favVenues.has(vid)?S.favVenues.delete(vid):S.favVenues.add(vid);lsSave();rVenues();toast(S.favVenues.has(vid)?'⭐ Venue saved':'Removed from saved');}
+
+// ── AUTH ───────────────────────────────────────────────────────
+function setSyncStatus(st){const dot=document.getElementById('sdot'),sub=document.getElementById('astatus');if(st==='syncing'){dot.className='sdot spin';sub.textContent='Syncing…';}else if(st==='ok'){dot.className='sdot';sub.textContent='Synced ✓';}else{dot.className='sdot err';sub.textContent='Sync error — local only';}}
+async function initAuth(){
+  lsLoad();rSched();
+  supabase.auth.onAuthStateChange(async(_,session)=>{
+    if(session?.user){
+      S.user=session.user;document.getElementById('ai').style.display='flex';document.getElementById('ao').style.display='none';
+      document.getElementById('aname').textContent=session.user.user_metadata?.full_name||session.user.email;
+      const av=document.getElementById('aavatar');if(session.user.user_metadata?.avatar_url){av.src=session.user.user_metadata.avatar_url;av.style.display='block';}
+      setSyncStatus('syncing');
+      try{const data=await loadAllUserData(S.user.id);D.preds=data.preds;D.evts=data.evts;D.favs=data.favs;lsSave();setSyncStatus('ok');rSched();rPred();rPlan();}catch(e){setSyncStatus('err');}
+    }else{S.user=null;document.getElementById('ai').style.display='none';document.getElementById('ao').style.display='flex';}
+  });
+  const slug=location.pathname.match(/\/share\/([a-z0-9]+)/)?.[1];
+  if(slug){try{const sn=await loadSharedSnapshot(slug);D.preds=sn.predictions||{};toast(`Viewing ${sn.display_name||'shared predictions'}`);sw('predictions');}catch(e){}}
+  document.getElementById('loader').classList.add('gone');
+  fetchLiveScores();fetchStandings();
+  setInterval(fetchLiveScores,120000);
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function ptTime(m){const[h,mn]=m.time.split(':').map(Number);const ampm=h>=12?'PM':'AM';const h12=h%12||12;return `${h12}:${mn.toString().padStart(2,'0')} ${ampm} PDT`;}
+function sbadge(s){return `<span class="sb sb-${s}">${{Group:'Group',R32:'R32',R16:'R16',QF:'QF',SF:'SF',Final:'FINAL'}[s]||s}</span>`;}
+function mTitle(m){return m.away?`${m.home} vs ${m.away}`:m.home;}
+function gEv(id){return D.evts[id]||null;}
+function gPr(id){return D.preds[id]||null;}
+function isFav(id){return D.favs.has(id);}
+function getLive(id){return S.liveScores[id]||null;}
+function isCol(m){return COL.has(m.home)||COL.has(m.away);}
+function isUsa(m){return USA.has(m.home)||USA.has(m.away);}
+
+// ── ACTIONS ────────────────────────────────────────────────────
+async function tFavId(id){const nf=!D.favs.has(id);nf?D.favs.add(id):D.favs.delete(id);lsSave();rSched();rCal();rPred();rPlan();toast(nf?'⭐ Starred':'Unstarred');if(S.user)try{await toggleFavorite(S.user.id,id,nf);}catch(e){setSyncStatus('err');}}
+async function setEv(id,t){const same=D.evts[id]===t;same?delete D.evts[id]:D.evts[id]=t;lsSave();rSched();rCal();rPlan();if(!same)toast({party:'🎉 Watch party set!',home:'🏠 Watching at home',skip:'Skipping'}[t]||'Saved');if(S.user)try{await saveEvent(S.user.id,id,same?null:t);}catch(e){setSyncStatus('err');}}
+async function savePred(id){const hs=document.getElementById(`ph-${id}`)?.value||'';const as=document.getElementById(`pa-${id}`)?.value||'';const w=document.getElementById(`pw-${id}`)?.value||'';if(!D.preds[id])D.preds[id]={};if(hs!==''&&as!==''){D.preds[id].h=hs;D.preds[id].a=as;}if(w)D.preds[id].w=w;lsSave();rPred();rPlan();toast('🎯 Prediction saved!');if(S.user)try{await savePrediction(S.user.id,id,hs,as,w);}catch(e){setSyncStatus('err');}}
+
+// ── MATCH CARD ─────────────────────────────────────────────────
+function mCard(m,showPred){
+  const ev=gEv(m.id),pr=gPr(m.id),fav=isFav(m.id),live=getLive(m.id);
+  let evCls=ev==='party'?'ep':ev==='home'?'eh':ev==='skip'?'esk':'';
+  const fanCls=isCol(m)?'fancol':isUsa(m)?'fanusa':'';
+  const seaBadge=SEA_IDS.has(m.id)?`<span class="sea-badge">📍 Seattle</span>`:'';
+  const grpBadge=m.group?`<span class="sb" style="background:var(--g6);color:var(--g2)">Grp ${m.group}</span>`:'';
+  const liveBadge=live?`<span style="font-size:var(--fs-xs);font-weight:700;padding:2px 9px;border-radius:var(--rp);background:#D12B2B;color:#FFF;animation:blink .9s infinite">${live.status==='HT'?'HT':live.minute?`${live.minute}'`:'LIVE'}</span>`:'';
+  const scoreEl=live?`<div class="mc-score live">${live.home} – ${live.away}</div>`:'';
+  const homeDisp=`<div class="team-part"><span class="team-flag">${flag(m.home)}</span><span class="team-name">${m.home}</span></div>`;
+  const awayDisp=m.away?`<div class="team-part"><span class="team-flag">${flag(m.away)}</span><span class="team-name">${m.away}</span></div>`:'';
+  const teamsHtml=m.away?`<div class="mc-teams-row">${homeDisp}<span class="vs-sep">vs</span>${awayDisp}</div>`:`<div class="mc-teams-row">${homeDisp}</div>`;
+  let predHtml='';
+  if(showPred){
+    const has=pr&&pr.h!==undefined;
+    predHtml=`<div class="pred-row">
+      <span class="plbl2">Score</span>
+      <input class="sc-in" id="ph-${m.id}" type="number" min="0" max="20" placeholder="–" value="${has?pr.h:''}" ${m.away?'':'disabled'} aria-label="${m.home} score"/>
+      <span style="font-size:14px;color:var(--tx4)" aria-hidden="true">–</span>
+      <input class="sc-in" id="pa-${m.id}" type="number" min="0" max="20" placeholder="–" value="${has?pr.a:''}" ${m.away?'':'disabled'} aria-label="${m.away||'away'} score"/>
+      ${m.away?`<select class="wsel" id="pw-${m.id}" aria-label="Predicted winner">
+        <option value="">Winner?</option>
+        <option ${pr?.w===m.home?'selected':''}>${m.home}</option>
+        <option value="Draw" ${pr?.w==='Draw'?'selected':''}>Draw</option>
+        <option ${pr?.w===m.away?'selected':''}>${m.away}</option>
+      </select>`:''}
+      <button class="savbtn" onclick="App._sp(${m.id})">Save</button>
+      ${has?`<span class="pchip">${pr.h}–${pr.a}${pr.w?' · '+pr.w:''}</span>`:''}
+    </div>`;
+  }
+  return `<div class="mc ${evCls} ${fanCls}">
+    <div class="mc-top">
+      <div style="flex:1;min-width:0">
+        ${teamsHtml}
+        <div class="mc-tags">${grpBadge}${sbadge(m.stage)}${seaBadge}${liveBadge}</div>
+        <div class="mc-meta">
+          <span class="mc-meta-item"><i class="ti ti-clock" aria-hidden="true"></i>${ptTime(m)}</span>
+          <span class="mc-meta-item"><i class="ti ti-map-pin" aria-hidden="true"></i>${m.venue}</span>
+        </div>
+        ${predHtml}
+      </div>
+      <div class="mc-right">
+        ${scoreEl}
+        <button class="favbtn" onclick="App._tf(${m.id})" aria-label="${fav?'Unstar':'Star'} match" aria-pressed="${fav}">
+          <i class="ti ti-star" style="color:${fav?'#C9981A':'var(--tx4)'}" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mc-actions">
+      <span class="plbl" aria-hidden="true">Plan:</span>
+      <button class="evb ${ev==='party'?'ep':''}" onclick="App._ev(${m.id},'party')" aria-pressed="${ev==='party'}"><i class="ti ti-users" style="font-size:13px" aria-hidden="true"></i> Party</button>
+      <button class="evb ${ev==='home'?'eh':''}" onclick="App._ev(${m.id},'home')" aria-pressed="${ev==='home'}"><i class="ti ti-home" style="font-size:13px" aria-hidden="true"></i> Home</button>
+      <button class="evb ${ev==='skip'?'esk':''}" onclick="App._ev(${m.id},'skip')" aria-pressed="${ev==='skip'}"><i class="ti ti-x" style="font-size:13px" aria-hidden="true"></i> Skip</button>
+      <button class="evb" onclick="App.addOneCal(${m.id})" style="margin-left:auto" aria-label="Add to calendar"><i class="ti ti-calendar-plus" style="font-size:13px" aria-hidden="true"></i></button>
+    </div>
+  </div>`;
+}
+
+// ── RENDER: SCHEDULE ──────────────────────────────────────────
+function rSched(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const ms=MATCHES.filter(m=>{
+    if(S.stageF&&m.stage!==S.stageF)return false;
+    if(S.favF&&!isFav(m.id))return false;
+    if(S.planF&&!gEv(m.id))return false;
+    if(S.seaF&&!SEA_IDS.has(m.id))return false;
+    if(S.colF&&!isCol(m))return false;
+    if(S.usaF&&!isUsa(m))return false;
+    if(S.liveF&&!getLive(m.id))return false;
+    if(q&&!(m.home+m.away+m.venue+m.group).toLowerCase().includes(q))return false;
+    return true;
+  });
+  if(!ms.length){document.getElementById('sched-list').innerHTML='<div class="empty"><div class="empty-ico">🔍</div><div class="empty-txt">No matches found</div></div>';return;}
+  let html='',last='';
+  ms.forEach(m=>{
+    if(m.date!==last){const d=new Date(m.date+'T12:00:00');const cnt=ms.filter(x=>x.date===m.date).length;html+=`<div class="dhdr"><span class="dhdr-text">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span><span class="dhdr-pill">${cnt} game${cnt>1?'s':''}</span></div><div class="mwrap">`;last=m.date;}
+    html+=mCard(m,false);
+    const nxt=ms[ms.indexOf(m)+1];if(!nxt||nxt.date!==m.date)html+='</div>';
+  });
+  document.getElementById('sched-list').innerHTML=html;
+}
+
+function setStage(el,s){S.stageF=s;document.querySelectorAll('#stage-chips .fc[data-s]').forEach(b=>b.classList.remove('active'));el.classList.add('active');rSched();}
+function tFavF(){S.favF=!S.favF;document.getElementById('fc-fav').classList.toggle('active',S.favF);rSched();}
+function tPlanF(){S.planF=!S.planF;document.getElementById('fc-plan').classList.toggle('active',S.planF);rSched();}
+function tSeaF(){S.seaF=!S.seaF;document.getElementById('fc-sea').classList.toggle('active',S.seaF);rSched();}
+function tColF(){S.colF=!S.colF;if(S.colF)S.usaF=false;document.getElementById('fc-col').classList.toggle('active',S.colF);document.getElementById('fc-usa').classList.remove('active');rSched();}
+function tUsaF(){S.usaF=!S.usaF;if(S.usaF)S.colF=false;document.getElementById('fc-usa').classList.toggle('active',S.usaF);document.getElementById('fc-col').classList.remove('active');rSched();}
+function tLiveF(){S.liveF=!S.liveF;document.getElementById('fc-live').classList.toggle('active',S.liveF);rSched();}
+function tUnpF(){S.unpF=!S.unpF;document.getElementById('fc-unp').classList.toggle('active',S.unpF);rPred();}
+function setPStage(el,s){S.pstageF=s;document.querySelectorAll('.fc[data-ps]').forEach(b=>b.classList.remove('active'));el.classList.add('active');rPred();}
+
+// ── RENDER: CALENDAR ──────────────────────────────────────────
+function rCal(){
+  const yr=S.calYr,mo=S.calMo;
+  document.getElementById('cal-mo').textContent=new Date(yr,mo,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const fdow=new Date(yr,mo,1).getDay(),dim=new Date(yr,mo+1,0).getDate();
+  let html='';
+  for(let i=0;i<fdow;i++)html+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=dim;d++){
+    const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dm=MATCHES.filter(m=>m.date===ds);
+    const isT=d===TODAY.getDate()&&mo===TODAY.getMonth()&&yr===TODAY.getFullYear();
+    html+=`<div class="cal-cell${isT?' today':''}${S.selDay===ds?' sel':''}" onclick="App._sd('${ds}')" tabindex="0" onkeydown="if(event.key==='Enter')App._sd('${ds}')" aria-label="${d}${dm.length?' — '+dm.length+' matches':''}"><div class="cal-dnum">${d}</div>`;
+    dm.slice(0,4).forEach(m=>{const ev=gEv(m.id),live=getLive(m.id);const dot=ev==='party'?'🎉':ev==='home'?'🏠':'';html+=`<div class="cpip ${m.stage}">${dot}${SEA_IDS.has(m.id)?'⚡':''}${live?'●':''}${m.home.slice(0,4)}</div>`;});
+    if(dm.length>4)html+=`<div style="font-size:9px;color:var(--g4);font-weight:600">+${dm.length-4}</div>`;
+    html+='</div>';
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+  if(S.selDay)rCalDetail(S.selDay);
+}
+function selDay(ds){S.selDay=S.selDay===ds?null:ds;rCal();}
+function rCalDetail(ds){
+  const dm=MATCHES.filter(m=>m.date===ds);if(!dm.length){document.getElementById('cal-detail').innerHTML='';return;}
+  const d=new Date(ds+'T12:00:00');
+  let html=`<div class="sec-hdr"><span class="sec-hdr-txt">${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})} · ${dm.length} match${dm.length>1?'es':''}</span></div><div class="mwrap">`;
+  dm.forEach(m=>{html+=mCard(m,false);});
+  document.getElementById('cal-detail').innerHTML=html+'</div>';
+}
+function pMo(){if(S.calMo===5&&S.calYr===2026)return;S.calMo--;if(S.calMo<0){S.calMo=11;S.calYr--;}rCal();}
+function nMo(){if(S.calMo===6&&S.calYr===2026)return;S.calMo++;if(S.calMo>11){S.calMo=0;S.calYr++;}rCal();}
+
+// ── RENDER: PREDICTIONS ────────────────────────────────────────
+function rPred(){
+  const ms=MATCHES.filter(m=>{if(S.pstageF&&m.stage!==S.pstageF)return false;if(S.unpF&&gPr(m.id))return false;return true;});
+  const tot=MATCHES.length,done=MATCHES.filter(m=>gPr(m.id)).length,pct=Math.round(done/tot*100);
+  const seaDone=[...SEA_IDS].filter(id=>gPr(id)).length;
+  const colDone=MATCHES.filter(m=>isCol(m)&&gPr(m.id)).length,colTot=MATCHES.filter(m=>isCol(m)).length;
+  const stD=[{s:'Group',lbl:'Group stage',cnt:72,col:'#52B788'},{s:'R32',lbl:'Round of 32',cnt:16,col:'#1B6CA8'},{s:'R16',lbl:'Round of 16',cnt:8,col:'#C9981A'},{s:'QF',lbl:'Quarters',cnt:4,col:'#7B4F2E'},{s:'SF',lbl:'Semis',cnt:3,col:'#5E35B1'},{s:'Final',lbl:'Final',cnt:1,col:'#1B4332'}];
+  document.getElementById('pred-hdr').innerHTML=`
+    <div class="pred-ring">
+      <svg width="68" height="68" viewBox="0 0 68 68" aria-label="Prediction completion ${pct}%" role="img">
+        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--g6)" stroke-width="9"/>
+        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--g3)" stroke-width="9"
+          stroke-dasharray="${(2*Math.PI*28).toFixed(1)}"
+          stroke-dashoffset="${(2*Math.PI*28*(1-pct/100)).toFixed(1)}"
+          stroke-linecap="round" transform="rotate(-90 34 34)"/>
+        <text x="34" y="39" text-anchor="middle" font-size="14" font-weight="700" fill="var(--g3)">${pct}%</text>
+      </svg>
+      <div>
+        <div style="font-size:22px;font-weight:700;color:var(--g3)">${done}<span style="font-size:14px;font-weight:500;color:var(--tx3)"> / ${tot}</span></div>
+        <div style="font-size:var(--fs-xs);color:var(--tx3);margin-top:2px;font-weight:500">predictions · Seattle ${seaDone}/${SEA_IDS.size} · 🇨🇴 ${colDone}/${colTot}</div>
+      </div>
+    </div>
+    <div class="sgrid">
+      <div class="scard g"><div class="sval">${done}</div><div class="slbl">Made</div></div>
+      <div class="scard t"><div class="sval">${tot-done}</div><div class="slbl">Left</div></div>
+      <div class="scard c"><div class="sval">${pct}%</div><div class="slbl">Done</div></div>
+      <div class="scard go"><div class="sval">${seaDone}</div><div class="slbl">Seattle</div></div>
+    </div>
+    <div class="prog-sec">
+      ${stD.map(({s,lbl,cnt,col})=>{const sd=MATCHES.filter(m=>m.stage===s&&gPr(m.id)).length;const sp=Math.round(sd/cnt*100);return `<div class="prow"><span class="plbl3">${lbl}</span><div class="ptrack" role="progressbar" aria-valuenow="${sp}" aria-valuemin="0" aria-valuemax="100"><div class="pfill" style="width:${sp}%;background:${col}"></div></div><span class="pct">${sd}/${cnt}</span></div>`;}).join('')}
+    </div>`;
+  let html='',last='';
+  ms.forEach(m=>{
+    if(m.date!==last){const d=new Date(m.date+'T12:00:00');html+=`<div class="dhdr"><span class="dhdr-text">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span></div><div class="mwrap">`;last=m.date;}
+    html+=mCard(m,true);const nxt=ms[ms.indexOf(m)+1];if(!nxt||nxt.date!==m.date)html+='</div>';
+  });
+  document.getElementById('pred-list').innerHTML=html||'<div class="empty"><div class="empty-ico">🎯</div><div class="empty-txt">All predicted — legend!</div></div>';
+}
+
+// ── RENDER: VENUES ─────────────────────────────────────────────
+function setVF(f){S.venueFilter=f;['all','close','official','free','fav'].forEach(k=>document.getElementById(`vf-${k}`)?.classList.remove('active'));document.getElementById(`vf-${f}`)?.classList.add('active');rVenues();}
+function rVenues(){
+  let vs=[...VENUES];
+  if(S.venueFilter==='close')vs=vs.sort((a,b)=>a.dist-b.dist);
+  else if(S.venueFilter==='official')vs=vs.filter(v=>v.official);
+  else if(S.venueFilter==='free')vs=vs.filter(v=>v.free);
+  else if(S.venueFilter==='fav')vs=vs.filter(v=>S.favVenues.has(v.id));
+  document.getElementById('venue-count').textContent=`${vs.length} venue${vs.length!==1?'s':''} · Tap ⭐ to save · 📅 to add to calendar`;
+  if(!vs.length){document.getElementById('venue-list').innerHTML='<div class="empty"><div class="empty-ico">📍</div><div class="empty-txt">No venues match this filter</div></div>';return;}
+  const typeCls={bar:'vt-bar',outdoor:'vt-outdoor',venue:'vt-venue'};
+  const typeLabel={bar:'🍺 Bar/Pub',outdoor:'🌿 Outdoor/Public',venue:'🎮 Entertainment'};
+  document.getElementById('venue-list').innerHTML=vs.map(v=>{
+    const isFavV=S.favVenues.has(v.id);
+    return `<div class="venue-card${isFavV?' fav-venue':''}">
+      <div class="venue-top">
+        <div style="flex:1;min-width:0">
+          <div class="venue-name">${v.name}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+            <span class="venue-type ${typeCls[v.type]||'vt-bar'}">${typeLabel[v.type]||v.type}</span>
+            ${v.official?`<span class="venue-type vt-official">🏆 Official Fan Zone</span>`:''}
+            ${v.free?`<span class="venue-type vt-free">✓ Free entry</span>`:''}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <span class="venue-dist">📍 ${v.dist} mi</span>
+          ${v.rating?`<span style="font-size:var(--fs-xs);color:var(--go3);font-weight:700">${v.rating} ★</span>`:''}
+        </div>
+      </div>
+      <div class="venue-meta">
+        <span><i class="ti ti-map-pin" style="font-size:12px" aria-hidden="true"></i>${v.area}</span>
+        ${v.phone?`<span><i class="ti ti-phone" style="font-size:12px" aria-hidden="true"></i>${v.phone}</span>`:''}
+        <span><i class="ti ti-clock" style="font-size:12px" aria-hidden="true"></i>${v.hours}</span>
+      </div>
+      <div class="venue-desc">${v.desc}</div>
+      <div class="venue-tags">${v.tags.map(t=>`<span class="vtag">${t}</span>`).join('')}</div>
+      <div class="venue-actions">
+        <button class="venue-btn primary" onclick="window.open('${v.maps}','_blank')" aria-label="Get directions to ${v.name}">
+          <i class="ti ti-map" style="font-size:13px" aria-hidden="true"></i> Directions
+        </button>
+        <button class="venue-btn secondary" onclick="App.addVenueCal('${v.id}')" aria-label="Add ${v.name} to calendar">
+          <i class="ti ti-calendar-plus" style="font-size:13px" aria-hidden="true"></i> Add to Calendar
+        </button>
+        ${v.url?`<button class="venue-btn outline" onclick="window.open('${v.url}','_blank')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Website</button>`:''}
+        <button class="venue-btn outline" onclick="App.favVenue('${v.id}')" aria-pressed="${isFavV}" aria-label="${isFavV?'Remove':'Save'} ${v.name}" style="margin-left:auto">
+          <i class="ti ti-star" style="color:${isFavV?'#C9981A':'var(--tx4)'}" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER: MY PLAN ────────────────────────────────────────────
+function rPlan(){
+  const parties=MATCHES.filter(m=>gEv(m.id)==='party');
+  const homes=MATCHES.filter(m=>gEv(m.id)==='home');
+  const skips=MATCHES.filter(m=>gEv(m.id)==='skip');
+  const starred=MATCHES.filter(m=>isFav(m.id));
+  document.getElementById('plan-hdr').innerHTML=`
+    <div class="sgrid">
+      <div class="scard g"><div class="sval">${parties.length}</div><div class="slbl">🎉 Parties</div></div>
+      <div class="scard t"><div class="sval">${homes.length}</div><div class="slbl">🏠 Home</div></div>
+      <div class="scard c"><div class="sval">${skips.length}</div><div class="slbl">Skip</div></div>
+      <div class="scard go"><div class="sval">${starred.length}</div><div class="slbl">⭐ Starred</div></div>
+    </div>`;
+  const total=parties.length+homes.length+skips.length;
+  const ds=document.getElementById('plan-donut');
+  if(total>0){
+    ds.innerHTML=`<div class="donut-wrap"><canvas id="donut-c" width="110" height="110" role="img" aria-label="Watch plan: ${parties.length} parties, ${homes.length} home, ${skips.length} skipping"></canvas>
+    <div class="pleg">
+      <div class="pli"><span class="plsw" style="background:#52B788"></span>Watch parties (${parties.length})</div>
+      <div class="pli"><span class="plsw" style="background:#1B6CA8"></span>At home (${homes.length})</div>
+      <div class="pli"><span class="plsw" style="background:#747D69"></span>Skipping (${skips.length})</div>
+    </div></div>`;
+    if(donutChart)donutChart.destroy();
+    donutChart=new Chart(document.getElementById('donut-c'),{type:'doughnut',data:{labels:['Parties','Home','Skipping'],datasets:[{data:[parties.length,homes.length,skips.length],backgroundColor:['#52B788','#1B6CA8','#747D69'],borderWidth:0}]},options:{responsive:false,plugins:{legend:{display:false}},cutout:'66%'}});
+  }else{ds.innerHTML='';}
+
+  document.getElementById('plan-ics').innerHTML=`
+    <div class="share-card">
+      <div class="share-title"><i class="ti ti-calendar" style="font-size:15px" aria-hidden="true"></i> Export to calendar</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="ical-btn apple" onclick="App.exportICS('planned')"><i class="ti ti-calendar-plus" style="font-size:14px" aria-hidden="true"></i> Apple Calendar (.ics)</button>
+        <button class="ical-btn gcal" onclick="App.expGCal()"><i class="ti ti-brand-google" style="font-size:14px" aria-hidden="true"></i> Google Calendar</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="ical-btn apple" onclick="App.exportICS('seattle')" style="border-color:var(--g4);color:var(--g3)">📍 Seattle games only</button>
+        <button class="ical-btn apple" onclick="App.exportICS('all')" style="border-color:var(--bd3);color:var(--tx3)">All 104 matches</button>
+      </div>
+      <div class="ics-info">The .ics file works in Apple Calendar, Outlook, and any calendar app. On iPhone, tap Open after downloading.</div>
+    </div>`;
+
+  const done=MATCHES.filter(m=>gPr(m.id)).length;
+  if(done>0){
+    document.getElementById('plan-share').innerHTML=`
+      <div class="share-card" style="background:var(--t7);border-color:var(--t5)">
+        <div class="share-title" style="color:var(--t3)"><i class="ti ti-share" style="font-size:15px" aria-hidden="true"></i> Share predictions with friends</div>
+        <div style="font-size:var(--fs-sm);color:var(--tx3);margin-bottom:6px;font-weight:500">${done} predictions ready to share</div>
+        <input class="share-input" style="border-color:var(--t5)" id="share-name" placeholder="Your name (e.g. Alejo's picks)" value="${S.user?.user_metadata?.full_name||''}" aria-label="Display name"/>
+        <button class="abtn primary" onclick="App.shareLink()" style="width:100%;justify-content:center">
+          <i class="ti ti-link" style="font-size:14px" aria-hidden="true"></i> Generate share link
+        </button>
+        <div id="share-result" aria-live="polite"></div>
+      </div>`;
+  }else{document.getElementById('plan-share').innerHTML='';}
+
+  let html='';
+  if(!parties.length&&!homes.length&&!starred.length){html='<div class="empty"><div class="empty-ico">🗓️</div><div class="empty-txt">Star matches and set watch plans<br>in Schedule or Calendar</div></div>';}
+  if(parties.length){html+=`<div class="sec-hdr"><span class="sec-hdr-txt">Watch parties</span><span class="sec-hdr-line"></span></div><div class="mwrap">`;parties.forEach(m=>{html+=mCard(m,false);});html+='</div>';}
+  if(homes.length){html+=`<div class="sec-hdr"><span class="sec-hdr-txt">At home</span><span class="sec-hdr-line"></span></div><div class="mwrap">`;homes.forEach(m=>{html+=mCard(m,false);});html+='</div>';}
+  if(starred.length){html+=`<div class="sec-hdr"><span class="sec-hdr-txt">Starred</span><span class="sec-hdr-line"></span></div><div class="mwrap">`;starred.forEach(m=>{html+=mCard(m,false);});html+='</div>';}
+  document.getElementById('plan-list').innerHTML=html;
+}
+
+async function shareLink(){
+  if(!S.user){toast('Sign in to create share links');return;}
+  const name=document.getElementById('share-name')?.value||'My predictions';
+  try{
+    const url=await createShareLink(S.user.id,name,D.preds);
+    document.getElementById('share-result').innerHTML=`<div class="share-link">${url}<button class="copy-btn" onclick="navigator.clipboard.writeText('${url}').then(()=>App.toast('Copied! 🔗'))">Copy</button></div>`;
+    await navigator.clipboard.writeText(url).catch(()=>{});toast('Link copied! 🔗');
+  }catch(e){toast('Could not create link — sign in first');}
+}
+
+// ── NAV ────────────────────────────────────────────────────────
+const VIEWS=['schedule','calendar','standings','predictions','venues','myplan'];
+function sw(v){
+  VIEWS.forEach(x=>{document.getElementById(`v-${x}`).classList.remove('active');const t=document.getElementById(`tab-${x}`);if(t)t.classList.remove('active');});
+  document.getElementById(`v-${v}`).classList.add('active');
+  const tab=document.getElementById(`tab-${v}`);if(tab)tab.classList.add('active');
+  document.getElementById('scroll').scrollTop=0;
+  const ind=document.getElementById('nind');ind.style.left=tab.offsetLeft+'px';ind.style.width=tab.offsetWidth+'px';
+  if(v==='calendar')rCal();
+  if(v==='standings'){if(!Object.keys(S.standings).length)fetchStandings();else{buildGroupBtns();renderStandings(S.selGroup);}}
+  if(v==='predictions')rPred();
+  if(v==='venues')rVenues();
+  if(v==='myplan')rPlan();
+}
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+
+function updateCd(){
+  const ko=new Date('2026-06-11T15:00:00-06:00'),now=new Date(),diff=ko-now;
+  if(diff<=0){document.getElementById('cd-txt').textContent='LIVE';return;}
+  const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000);
+  document.getElementById('cd-txt').textContent=d>0?`${d}D ${h}H`:`${h}H ${m}M`;
+}
+
+// ── EXPOSE ─────────────────────────────────────────────────────
+window.App={
+  signIn:signInWithGoogle,
+  signOut:async()=>{await sbOut();toast('Signed out');},
+  rSched,rCal,rPred,rPlan,rVenues,sw,toast,
+  expGCal,exportICS,addOneCal,shareLink,
+  setStage,setPStage,tFavF,tPlanF,tSeaF,tColF,tUsaF,tLiveF,tUnpF,pMo,nMo,
+  selGroup,fetchStandings,setVF,
+  addVenueCal:addVenueToCal,favVenue,
+  _tf:tFavId,_ev:setEv,_sp:savePred,_sd:selDay,
+};
+
+// ── BOOT ───────────────────────────────────────────────────────
+lsLoad();rSched();updateCd();
+setInterval(updateCd,60000);
+requestAnimationFrame(()=>{const t=document.getElementById('tab-schedule'),i=document.getElementById('nind');i.style.left=t.offsetLeft+'px';i.style.width=t.offsetWidth+'px';});
+initAuth();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
